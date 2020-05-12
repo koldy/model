@@ -1,8 +1,10 @@
 # Koldy Model
 
 Koldy Model ensures correct and strict structure of Javascript object instances in runtime so you don't have to worry any more
-if you have a string or number, is it integer or float, is it undefined, null or something useful. It works best
-with ES6 classes and it supports data structures (objects) and lists (arrays) of these data structures (objects).
+does it exist in data structure, is it a string or number, is it integer or float, is it undefined, null or something useful.
+If you want to avoid errors such as `Uncaught TypeError: Cannot read property 'address' of undefined`, then you're in the right place.
+
+It works best with ES6 classes and it supports data structures (objects called Models) and lists (arrays) of these data structures.
 
 It can be used to "parse" JSON responses by initializing correct data structures, collect input from forms
 and still keep the correct data types or to ensure that you send correct JSON structure to your backend.
