@@ -14,7 +14,13 @@
   },
   "author": "Vlatko Koudela",
   "license": "MIT",
-  "dependencies": {},
+	"bugs": {
+		"url": "https://github.com/koldy/model/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/koldy/model.git"
+	},
   "files": [
     "lib/*",
     "esm/*"

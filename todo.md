@@ -1,6 +1,0 @@
-- List.clone() - test
-- Model.clone() - implement and test
-- Lists in Model
-- JSON serialization
-- tests coverage
-- Docs

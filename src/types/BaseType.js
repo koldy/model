@@ -1,3 +1,5 @@
+import {isFunction} from '../helpers';
+
 export default class BaseType {
 	/**
 	 * The default value
@@ -61,11 +63,24 @@ export default class BaseType {
 	 * @return {*}
 	 */
 	getSetterValue(target, name, value) {
-		if (value === undefined) {
-			return this._defaultValue;
+		const defaultValue = this.getDefaultValue();
+		const customValidator = this.getCustomValidator();
+
+		let returnValue = value;
+
+		if (value === undefined || value === null) {
+			if (!this._acceptsNull && defaultValue === null) {
+				throw new TypeError(`Property "${name}" shouldn't be null and its default value is null which is not acceptable`);
+			}
+
+			returnValue = defaultValue === undefined ? null : defaultValue;
 		}
 
-		return value;
+		if (isFunction(customValidator)) {
+			customValidator.call(null, {value: returnValue, originalValue: value, name, target});
+		}
+
+		return returnValue;
 	}
 
 	/**
@@ -76,10 +91,6 @@ export default class BaseType {
 	 * @return {*}
 	 */
 	getGetterValue(target, name, value) {
-		if (value === undefined) {
-			return this._defaultValue;
-		}
-
 		return value;
 	}
 
@@ -117,5 +128,4 @@ export default class BaseType {
 	getCustomValidator() {
 		return this._validator;
 	}
-
 }
