@@ -1,6 +1,6 @@
 {
   "name": "koldy-model",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Worry-free JS object models",
   "main": "lib/index.js",
   "module": "esm/index.js",
@@ -14,13 +14,13 @@
   },
   "author": "Vlatko Koudela",
   "license": "MIT",
-	"bugs": {
-		"url": "https://github.com/koldy/model/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/koldy/model.git"
-	},
+  "bugs": {
+    "url": "https://github.com/koldy/model/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/koldy/model.git"
+  },
   "files": [
     "lib/*",
     "esm/*"

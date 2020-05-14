@@ -505,6 +505,8 @@ Once initialized, you may use the following methods:
 - `reset(): void` // removes all elements from the List
 - `count(): number` // returns how many elements instance of List has; it's same as using the `.length` property on the instance
 - `clone(): new instance` // returns new instance of List with the same data (be aware that data is not "deep cloned")
+- `forEvery(n: number, fn: function, thisArg: obj): void` // iterates through array every Nth element
+- `mapEvery(n: number, fn: function, thisArg: obj): array` // same as Array.map, just goes for every Nth element 
 
 All other methods are standard Javascript methods you may use on the instance of List:
 
