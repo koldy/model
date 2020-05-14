@@ -269,11 +269,11 @@ export default class List {
 	 */
 	get(index) {
 		if (typeof index !== 'number') {
-			throw new TypeError(`${this.displayName()}.get() expected number for the argument, got ${typeof index}`);
+			throw new TypeError(`${this.displayName()}.get() expected number for the first parameter, got ${typeof index}`);
 		}
 
 		if (index < 0) {
-			throw new TypeError('Invalid index, expected zero or positive integer');
+			throw new TypeError(`${this.displayName()}.get() expected zero or positive integer for first parameter`);
 		}
 
 		return typeof this._list[index] === 'undefined' ? null : this._list[index];
@@ -285,11 +285,11 @@ export default class List {
 	 */
 	set(index, value) {
 		if (typeof index !== 'number') {
-			throw new TypeError(`${this.displayName()}.get() expected number for the argument, got ${typeof index}`);
+			throw new TypeError(`${this.displayName()}.set() expected number for the first parameter, got ${typeof index}`);
 		}
 
 		if (index < 0) {
-			throw new TypeError('Invalid index, expected zero or positive integer');
+			throw new TypeError(`${this.displayName()}.set() expected zero or positive integer for first parameter`);
 		}
 
 		this._list[index] = this._parse(value);
@@ -314,6 +314,51 @@ export default class List {
 	 */
 	clone() {
 		return this.constructor.create([...this._list]);
+	}
+
+	/**
+	 * Same as array.map, but for every N elements
+	 * @param {number} n
+	 * @param {function} fn
+	 * @param {object} thisArg
+	 * @return {[]}
+	 */
+	mapEvery(n, fn, thisArg) {
+		if (typeof n !== 'number') {
+			throw new TypeError(`First parameter expected a number, got ${typeof n}`);
+		}
+
+		if (n < 1) {
+			throw new TypeError(`First parameter expected a positive integer, got: ${n}`);
+		}
+
+		const x = ~~n;
+
+		if (x !== n) {
+			throw new TypeError(`First parameter expected integer, got float: ${n}`);
+		}
+
+		if (!isFunction(fn)) {
+			throw new TypeError(`Second parameter expected a function, got ${typeof fn}`);
+		}
+
+		const results = [];
+
+		for (let i = 0; i < this.count(); i += n) {
+			results.push(fn.call(thisArg, this.get(i), i));
+		}
+
+		return results;
+	}
+
+	/**
+	 * Same as "mapEvery", but returns nothing
+	 * @param {number} n
+	 * @param {function} fn
+	 * @param {object} thisArg
+	 */
+	forEvery(n, fn, thisArg) {
+		this.mapEvery(n, fn, thisArg);
 	}
 
 	// implementations of standard Array methods

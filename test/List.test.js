@@ -72,7 +72,7 @@ class Vehicles extends List {
 class Scenario4 extends List {
 	definition() {
 		return function () {
-			this.create = function () {}
+			this.create = function () {};
 		};
 	}
 }
@@ -106,8 +106,8 @@ describe('Testing List', () => {
 		expect(x[0]).toBe('Sky');
 		expect(x.length).toBe(1);
 
-		expect(() => x[null] = 'Vlatko').toThrowError('Scenario1 doesn\'t allow assigning this');
-		expect(() => x.getMe).toThrowError("Scenario1 has no property \"getMe\"");
+		expect(() => (x[null] = 'Vlatko')).toThrowError("Scenario1 doesn't allow assigning this");
+		expect(() => x.getMe).toThrowError('Scenario1 has no property "getMe"');
 	});
 
 	it(`Testing invalid type errors`, () => {
@@ -120,12 +120,22 @@ describe('Testing List', () => {
 		);
 	});
 
+	it(`Testing other type errors`, () => {
+		const list = Scenario1.create();
+		expect(() => list.set('a', 'b')).toThrowError('Scenario1.set() expected number for the first parameter, got string');
+		expect(() => list.set(-1, 'b')).toThrowError('Scenario1.set() expected zero or positive integer for first parameter');
+		expect(() => list.get('a')).toThrowError('Scenario1.get() expected number for the first parameter, got string');
+		expect(() => list.get(-1)).toThrowError('Scenario1.get() expected zero or positive integer for first parameter');
+	});
+
 	it(`Testing calling new`, () => {
-		expect(() => new Scenario1()).toThrowError("Use Scenario1.create() to create the instance of Scenario1 model, don't use \"new Scenario1()\"");
+		expect(() => new Scenario1()).toThrowError(
+			'Use Scenario1.create() to create the instance of Scenario1 model, don\'t use "new Scenario1()"'
+		);
 	});
 
 	it(`Testing calling create with non-array`, () => {
-		expect(() => Scenario1.create('')).toThrowError("Expected array for Scenario1.create(), got string");
+		expect(() => Scenario1.create('')).toThrowError('Expected array for Scenario1.create(), got string');
 	});
 
 	it(`Testing map`, () => {
@@ -308,7 +318,9 @@ describe('Testing List', () => {
 	});
 
 	it(`Testing null definition`, () => {
-		expect(() => List.create([], null)).toThrowError('Invalid definition in List, expected instance of BaseType or function of Model, got null; definition() method is probably not defined');
+		expect(() => List.create([], null)).toThrowError(
+			'Invalid definition in List, expected instance of BaseType or function of Model, got null; definition() method is probably not defined'
+		);
 	});
 
 	it(`Testing invalid function definition`, () => {
@@ -325,5 +337,26 @@ describe('Testing List', () => {
 
 	it(`Testing create with invalid type`, () => {
 		expect(() => Scenario1.create().setData(null)).toThrowError('Expected array for Scenario1.setData(), got object');
+	});
+
+	it(`Testing forEvery and mapEvery`, () => {
+		const list = Scenario1.create(['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']);
+
+		expect(list.length).toBe(12);
+		expect(list.map((x) => x)).toStrictEqual(['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']);
+		expect(list.mapEvery(4, (x) => x)).toStrictEqual(['one', 'five', 'nine']);
+
+		let total = 0;
+		const r = list.forEvery(4, (x, i) => total += i);
+		expect(r).toBeUndefined();
+		expect(total).toBe(12);
+
+		expect(() => list.mapEvery('a', () => {})).toThrowError('First parameter expected a number, got string');
+		expect(() => list.mapEvery(0, () => {})).toThrowError('First parameter expected a positive integer, got: 0');
+		expect(() => list.mapEvery(5.2, () => {})).toThrowError('First parameter expected integer, got float: 5.2');
+		expect(() => list.mapEvery(5, null)).toThrowError('Second parameter expected a function, got object');
+
+		list.reset();
+		expect(list.length).toBe(0);
 	});
 });

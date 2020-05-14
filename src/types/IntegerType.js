@@ -129,10 +129,10 @@ export default class IntegerType extends BaseType {
 				return returnValue;
 			}
 
-			returnValue = ~~returnValue;
+			returnValue = ~~returnValue; // cut the decimals
 
 			this._validate(returnValue, value, name, target);
-			return returnValue; // cut the decimals
+			return returnValue;
 		}
 
 		if (isArray(returnValue)) {
