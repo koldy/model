@@ -59,7 +59,7 @@ export default class DateType extends BaseType {
 
 			if (defaultValue instanceof Date) {
 				if (isValidDate(defaultValue)) {
-				  const returnValue = new Date(defaultValue);
+					const returnValue = new Date(defaultValue);
 					this._validate(returnValue, value, name, target);
 					this._dateInstance = returnValue;
 					return returnValue;

@@ -184,10 +184,11 @@ export default class Model {
 	getData() {
 		const data = {};
 		this._keys.forEach((field) => {
-			if (isObject(this[field]) && this[field] instanceof Model) {
-				data[field] = this[field].getData();
+			const val = this.get(field);
+			if (isObject(val) && (val instanceof Model || val instanceof List)) {
+				data[field] = val.getData();
 			} else {
-				data[field] = this._definitions[field].getDataValue(this, field, this[field]);
+				data[field] = this._definitions[field].getDataValue(this, field, val);
 			}
 		});
 		return data;
@@ -207,7 +208,7 @@ export default class Model {
 			if (this._keys.indexOf(key) >= 0) {
 				// ^^ accept only keys from definition, ignore all other
 
-				if (isObject(this[key]) && this[key] instanceof Model) {
+				if (isObject(this[key]) && (this[key] instanceof Model || this[key] instanceof List)) {
 					this[key].setData(data[key]);
 				} else {
 					this[key] = data[key];

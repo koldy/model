@@ -24,4 +24,4 @@ export {
 	IntegerType,
 	ObjectType,
 	StringType
-}
+};

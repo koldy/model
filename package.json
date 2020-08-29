@@ -1,6 +1,6 @@
 {
   "name": "koldy-model",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Worry-free JS object models",
   "main": "lib/index.js",
   "module": "esm/index.js",
@@ -33,11 +33,11 @@
     "@babel/preset-env": "^7.11.0",
     "babel-eslint": "^10.1.0",
     "core-js": "^3.6.5",
-    "eslint": "^7.6.0",
+    "eslint": "^7.7.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "jest": "^26.3.0",
-    "prettier": "^2.0.5"
+    "jest": "^26.4.2",
+    "prettier": "^2.1.1"
   }
 }

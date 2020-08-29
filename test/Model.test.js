@@ -240,7 +240,7 @@ describe('Testing Model', () => {
 
 		expect(() => (u.address.suburb.x = 5)).toThrowError();
 
-		expect(() => (u.setData(null))).toThrowError('Scenario1.setData() expects object as parameter, got object');
+		expect(() => u.setData(null)).toThrowError('Scenario1.setData() expects object as parameter, got object');
 
 		u.setData({
 			address: {
