@@ -122,7 +122,7 @@ export default class List {
 
 	/**
 	 * Get the definition info
-	 * @returns {{type: String, def: *}}
+	 * @returns {{type: Number, def: *, name: null|string}}
 	 * @private
 	 */
 	_getDefinitionInfo() {
@@ -247,6 +247,22 @@ export default class List {
 	 * @param {*[]} data
 	 */
 	setData(data) {
+		if (isObject(data)) {
+			// it's possible that the provided value is the required instance of
+			const {type, def, name} = this._getDefinitionInfo();
+
+			switch (type) {
+				case MODEL_INSTANCE:
+					if (data.displayName() === this.displayName() && data.definition() === this.definition()) {
+						this._list = data;
+						return;
+					}
+					break;
+
+				// no default
+			}
+		}
+
 		if (!isArray(data)) {
 			throw new TypeError(`Expected array for ${this.displayName()}.setData(), got ${typeof data}`);
 		}

@@ -1,6 +1,7 @@
 import Model from '../src/Model';
 import StringType from '../src/types/StringType';
 import IntegerType from '../src/types/IntegerType';
+import List from '../src/List';
 
 class Driver extends Model {
 	definition() {
@@ -45,6 +46,30 @@ class Car extends Vehicle {
 class Bike extends Vehicle {
 	type() {
 		return 'BIKE';
+	}
+}
+
+class Translation extends Model {
+	definition() {
+		return {
+			languageId: new IntegerType().notNull(),
+			text: new StringType()
+		};
+	}
+}
+
+class Translations extends List {
+	definition() {
+		return Translation;
+	}
+}
+
+class PriceListItem extends Model {
+	definition() {
+		return {
+			id: new IntegerType().notNull(),
+			name: Translations
+		};
 	}
 }
 
@@ -121,5 +146,76 @@ describe('Testing Model in Model', () => {
 				}
 			})
 		);
+	});
+
+	it('Testing reassigning instances to the model', () => {
+		const priceListItem = PriceListItem.create({
+			id: 1,
+			name: [
+				{languageId: 1, text: 'The English name'},
+				{languageId: 2, text: 'Hrvatski naziv'}
+			]
+		});
+
+		expect(priceListItem.id).toBe(1);
+		expect(priceListItem.name).toBeInstanceOf(Translations);
+		expect(priceListItem.name[0].languageId).toBe(1);
+		expect(priceListItem.name[0].text).toBe('The English name');
+
+		const names = priceListItem.name.clone();
+		names[1].text = 'Novi naziv';
+		priceListItem.name = names;
+		expect(priceListItem.name[1].text).toBe('Novi naziv');
+
+		const name2 = priceListItem.name[0].clone();
+		name2.text = 'Second English';
+		expect(name2.text).toBe('Second English');
+		priceListItem.name[0] = name2;
+		expect(priceListItem.name[0].text).toBe('Second English');
+
+		// replace translations
+		const newTranslations = Translations.create();
+		newTranslations.push({
+			languageId: 3,
+			text: 'German name'
+		});
+		newTranslations.push({
+			languageId: 4,
+			text: 'Croatian name'
+		});
+
+		priceListItem.name = newTranslations;
+		expect(priceListItem.name[1].languageId).toBe(4);
+		expect(priceListItem.name[1].text).toBe('Croatian name');
+
+		const newTranslations2 = newTranslations.clone();
+		newTranslations2.push({
+			languageId: 1,
+			text: 'English name'
+		});
+
+		priceListItem.name = newTranslations2;
+		expect(priceListItem.name[2].languageId).toBe(1);
+		expect(priceListItem.name[2].text).toBe('English name');
+	});
+
+	it('Testing reassigning instances to the model (short version)', () => {
+		const priceListItem = PriceListItem.create({
+			id: 1,
+			name: [
+				{languageId: 1, text: 'The English name'},
+				{languageId: 2, text: 'Hrvatski naziv'}
+			]
+		});
+
+		const newNames = priceListItem.name.clone();
+		newNames.push({
+			languageId: 3,
+			text: 'German name'
+		});
+
+		priceListItem.name = newNames;
+		expect(priceListItem.name[2].languageId).toBe(3);
+		expect(priceListItem.name[2].text).toBe('German name');
 	});
 });

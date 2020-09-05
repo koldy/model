@@ -58,18 +58,22 @@ export default class Model {
 			const definition = self._definitions[field];
 
 			if (isFunction(definition)) {
-				// if this is a function, let's try to initialize it and the check it if its instance of model... if not, then we'll throw an error
-				let propInstance = null;
+				if (initialData[field] instanceof definition) {
+					self[field] = initialData[field];
+				} else {
+					// if this is a function, let's try to initialize it and the check it if its instance of model... if not, then we'll throw an error
+					let propInstance = null;
 
-				try {
-					propInstance = definition.create(initialData[field]);
-				} catch (ignored) {}
+					try {
+						propInstance = definition.create(initialData[field]);
+					} catch (ignored) {}
 
-				if (!(propInstance instanceof Model) && !(propInstance instanceof List)) {
-					throw new TypeError('Functions are not supported as type definition');
+					if (!(propInstance instanceof Model) && !(propInstance instanceof List)) {
+						throw new TypeError('Functions are not supported as type definition');
+					}
+
+					self[field] = propInstance;
 				}
-
-				self[field] = propInstance;
 			} else if (isObject(definition) && !(definition instanceof BaseType)) {
 				// we will treat this object as property's definition
 				self[field] = Model.create(isObject(givenData[field]) ? givenData[field] : {}, definition);
