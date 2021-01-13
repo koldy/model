@@ -207,7 +207,7 @@ export default class Model {
 		let givenData;
 		if (data === null || data === undefined) {
 			// if passed data is null or undefined, then reinitialize the empty structure as empty object if possible
-			givenData = {};
+			givenData = this.constructor.create({}).getData();
 		} else {
 			givenData = data;
 		}

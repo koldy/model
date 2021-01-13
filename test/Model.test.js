@@ -454,5 +454,15 @@ describe('Testing Image Data scenario', () => {
 		};
 
 		expect(item2.image.id).toBe(5);
+		expect(item2.image.presentable.x2.publicUrl).toBeNull();
+		expect(item2.image.presentable.x2.token).toBeNull();
+
+		item2.image = null;
+		expect(item2.image).toBeInstanceOf(ImageModel);
+		expect(item2.image.id).toBeNull();
+		expect(item2.image.presentable.x1.publicUrl).toBeNull();
+		expect(item2.image.presentable.x1.token).toBeNull();
+		expect(item2.image.presentable.x2.publicUrl).toBeNull();
+		expect(item2.image.presentable.x2.token).toBeNull();
 	})
 });
