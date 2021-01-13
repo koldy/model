@@ -240,8 +240,6 @@ describe('Testing Model', () => {
 
 		expect(() => (u.address.suburb.x = 5)).toThrowError();
 
-		expect(() => u.setData(null)).toThrowError('Scenario1.setData() expects object as parameter, got object');
-
 		u.setData({
 			address: {
 				street: null,
@@ -373,4 +371,88 @@ describe('Testing Model', () => {
 		x.freeze();
 		expect(x.isFrozen()).toBeTruthy();
 	});
+});
+
+
+class ImageData extends Model {
+	definition() {
+		return {
+			publicUrl: new StringType(),
+			token: new StringType()
+		};
+	}
+}
+
+export default class ImageModel extends Model {
+	definition() {
+		return {
+			id: new IntegerType(),
+			presentable: {
+				x1: ImageData,
+				x2: ImageData,
+				width: new IntegerType(),
+				height: new IntegerType()
+			},
+			thumbnail: {
+				x1: ImageData,
+				x2: ImageData,
+				width: new IntegerType(),
+				height: new IntegerType()
+			}
+		};
+	}
+}
+
+class ImageItem extends Model {
+	definition() {
+		return {
+			name: new StringType(),
+			image: ImageModel
+		}
+	}
+}
+
+describe('Testing Image Data scenario', () => {
+	it('Test empty model', () => {
+		const x = ImageModel.create();
+		expect(x).toBeInstanceOf(ImageModel);
+	})
+
+	it('Test partially empty data assignment', () => {
+		const item = ImageItem.create({
+			name: 'The image'
+		});
+
+		expect(item.name).toBe('The image');
+
+		const item2 = item.clone();
+		expect(item2.name).toBe('The image');
+
+		item2.image = {
+			id: 5,
+			presentable: {
+				height: 100,
+				width: 100,
+				x1: {
+					publicUrl: 'url',
+					token: 'some token'
+				},
+				x2: null
+			},
+			thumbnail: {
+				height: 10,
+				width: 10,
+				x1: {
+					publicUrl: 'thumb',
+					token: 'thumb'
+				},
+				x2: {
+					publicUrl: 'thumb2',
+					token: 'thumb2'
+				}
+			}
+		};
+
+		expect(item2.image.id).toBe(5);
+	})
 });

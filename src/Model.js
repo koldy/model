@@ -204,18 +204,26 @@ export default class Model {
 	 * @param {object} data
 	 */
 	setData(data = {}) {
-		if (!isObject(data)) {
-			throw new TypeError(`${this.displayName()}.setData() expects object as parameter, got ${typeof data}`);
+		let givenData;
+		if (data === null || data === undefined) {
+			// if passed data is null or undefined, then reinitialize the empty structure as empty object if possible
+			givenData = {};
+		} else {
+			givenData = data;
 		}
 
-		Object.keys(data).forEach((key) => {
+		if (!isObject(givenData)) {
+			throw new TypeError(`${this.displayName()}.setData() expects object as parameter, got ${typeof givenData}`);
+		}
+
+		Object.keys(givenData).forEach((key) => {
 			if (this._keys.indexOf(key) >= 0) {
 				// ^^ accept only keys from definition, ignore all other
 
 				if (isObject(this[key]) && (this[key] instanceof Model || this[key] instanceof List)) {
-					this[key].setData(data[key]);
+					this[key].setData(givenData[key]);
 				} else {
-					this[key] = data[key];
+					this[key] = givenData[key];
 				}
 			}
 		});
