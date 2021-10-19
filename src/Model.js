@@ -1,4 +1,4 @@
-import {isFunction, isObject, trim} from './helpers';
+import {isArray, isFunction, isObject, trim} from './helpers';
 import BaseType from './types/BaseType';
 import List from './List';
 
@@ -16,6 +16,14 @@ export default class Model {
 	 * @private
 	 */
 	_definitions = {};
+
+	/**
+	 * Map of initialized definitions for array subtypes; each key here is the name of a property and the value is instance of definition
+	 * in the moment when value is set
+	 * @type {{}}
+	 * @private
+	 */
+	_arrayDefinitions = {};
 
 	/**
 	 * @param {{}} data
@@ -78,6 +86,80 @@ export default class Model {
 				// we will treat this object as property's definition
 				self[field] = Model.create(isObject(givenData[field]) ? givenData[field] : {}, definition);
 				self[field].seal();
+			} else if (isArray(definition) && definition.length >= 1) {
+				// if definition is array, then it should be an array of available types... so we'll go through the list
+				// and we'll try to initialize value for every type; if we run out of options, then we'll throw TypeError
+				// type can be value as well, like "null"
+
+				if (self._arrayDefinitions[field]) {
+					delete self._arrayDefinitions[field];
+				}
+
+				let didSucceed = false;
+				let counter = 0;
+
+				do {
+					// iterate through all elements of the given definition array
+					const subType = definition[counter];
+
+					if (isFunction(subType)) {
+						if (initialData[field] instanceof subType) {
+							self[field] = initialData[field];
+							didSucceed = true;
+							// ^^ this doesn't affect _arrayDefinitions
+
+						} else {
+							try {
+								// if this is a function, let's try to initialize it and the check it if its instance of model... if not, then we'll throw an error
+								let propInstance = null;
+
+								try {
+									propInstance = subType.create(initialData[field]);
+								} catch (ignored) {
+								}
+
+								if (!(propInstance instanceof Model) && !(propInstance instanceof List)) {
+									throw new TypeError('Functions are not supported as type definition');
+								}
+
+								self[field] = propInstance;
+								didSucceed = true;
+								self._arrayDefinitions[field] = subType;
+							} catch (ignored) {}
+						}
+
+					} else if (isObject(subType) && !(subType instanceof BaseType)) {
+						try {
+							// we will treat this object as property's subType's definition
+							self[field] = Model.create(isObject(givenData[field]) ? givenData[field] : {}, subType);
+							self[field].seal();
+							didSucceed = true;
+							self._arrayDefinitions[field] = subType;
+						} catch (ignored) {}
+
+					} else if (isArray(subType)) {
+						throw new TypeError(`Error in definition for property "${field}": Array within the property's array of possible types is not permitted`);
+
+					} else if (subType === null) {
+						self[field] = null;
+						didSucceed = true;
+
+					} else {
+						try {
+							self[field] = subType.getSetterValue(self, field, givenData[field]);
+							didSucceed = true;
+							self._arrayDefinitions[field] = subType;
+						} catch (ignored) {}
+
+					}
+				} while (!didSucceed && counter++ < definition.length);
+
+				if (!didSucceed) {
+					throw new TypeError(
+						`Property ${field} in ${self.displayName()} can not be initialized due to invalid property definition or invalid value`
+					);
+				}
+
 			} else {
 				if (typeof field !== 'string') {
 					throw new TypeError(`Expected string for definition name, got ${typeof field} instead`);
@@ -121,6 +203,80 @@ export default class Model {
 
 				const definition = target._definitions[prop];
 
+				if (isArray(definition) && definition.length > 0) {
+					// retry setting value with any of the definitions
+					if (target._arrayDefinitions[prop]) {
+						delete target._arrayDefinitions[prop];
+					}
+
+					let didSucceed = false;
+					let counter = 0;
+
+					do {
+						// iterate through all elements of the given definition array
+						const subType = definition[counter];
+
+						if (isFunction(subType)) {
+							if (value instanceof subType) {
+								target[prop] = value;
+								didSucceed = true;
+								// ^^ this doesn't affect _arrayDefinitions
+
+							} else {
+								try {
+									// if this is a function, let's try to initialize it and the check it if its instance of model... if not, then we'll throw an error
+									let propInstance = null;
+
+									try {
+										propInstance = subType.create(value);
+									} catch (ignored) {
+									}
+
+									if (!(propInstance instanceof Model) && !(propInstance instanceof List)) {
+										throw new TypeError('Functions are not supported as type definition');
+									}
+
+									target[prop] = propInstance;
+									didSucceed = true;
+									target._arrayDefinitions[prop] = subType;
+								} catch (ignored) {}
+							}
+
+						} else if (isObject(subType) && !(subType instanceof BaseType)) {
+							try {
+								// we will treat this object as property's subType's definition
+								target[prop] = Model.create(isObject(value) ? value : {}, subType);
+								target[prop].seal();
+								didSucceed = true;
+								target._arrayDefinitions[prop] = subType;
+							} catch (ignored) {}
+
+						} else if (isArray(subType)) {
+							throw new TypeError(`Error in definition for property "${prop}": Array within the property's array of possible types is not permitted`);
+
+						} else if (subType === null) {
+							target[prop] = null;
+							didSucceed = true;
+
+						} else {
+							try {
+								target[prop] = subType.getSetterValue(target, prop, value);
+								didSucceed = true;
+								target._arrayDefinitions[prop] = subType;
+							} catch (ignored) {}
+
+						}
+					} while (!didSucceed && counter++ < definition.length);
+
+					if (!didSucceed) {
+						throw new TypeError(
+							`Property ${prop} in ${target.displayName()} can not be initialized due to invalid property definition or invalid value`
+						);
+					}
+
+					return true;
+				}
+
 				if (isObject(target[prop]) && (target[prop] instanceof Model || target[prop] instanceof List)) {
 					target[prop].setData(value);
 					return true;
@@ -136,21 +292,33 @@ export default class Model {
 			},
 
 			get: (target, prop) => {
+				const val = target[prop];
 				const definition = target._definitions[prop];
 
-				if (typeof target[prop] === 'function') {
-					return target[prop].bind(target);
+				if (typeof val === 'function') {
+					return val.bind(target);
 				}
 
-				if (isObject(target[prop]) && (target[prop] instanceof Model || target[prop] instanceof List)) {
-					return target[prop];
+				if (isObject(val) && (val instanceof Model || val instanceof List)) {
+					return val;
+				}
+
+				if (isArray(definition)) {
+					// let's lookup for the subtype
+					const subDefinition = self._arrayDefinitions[prop];
+
+					if (subDefinition) {
+						return subDefinition.getGetterValue(target, prop, val);
+					}
+
+					throw new TypeError(`Can not get ${prop} because its definition in ${target.displayName()} model is invalid`);
 				}
 
 				if (!(definition instanceof BaseType)) {
 					throw new TypeError(`Can not get ${prop} because it's not defined in ${target.displayName()} model`);
 				}
 
-				return definition.getGetterValue(target, prop, target[prop]);
+				return definition.getGetterValue(target, prop, val);
 			}
 		};
 

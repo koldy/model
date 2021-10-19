@@ -58,6 +58,14 @@ class Scenario5 extends Model {
 }
 
 describe(`Testing StringType`, () => {
+	it(`Testing StringType property typeof string`, () => {
+		const u = User.create({
+			firstName: 'Vlatko'
+		});
+
+		expect(typeof u.firstName).toBe('string');
+	});
+
 	it(`Testing empty instance of User`, () => {
 		const u = User.create({
 			firstName: 'Vlatko'

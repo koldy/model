@@ -53,8 +53,15 @@ export default class DateType extends BaseType {
 
 			if (typeof defaultValue === 'string') {
 				this._validate(defaultValue, value, name, target);
-				this._dateInstance = null;
-				return defaultValue;
+				// good, let's parse it
+				const d = new Date(Date.parse(defaultValue));
+
+				if (!isValidDate(d)) {
+					throw new TypeError(`Unable to parse default value "${defaultValue}" for property "${name}"`);
+				}
+
+				this._dateInstance = d;
+				return d;
 			}
 
 			if (defaultValue instanceof Date) {
@@ -90,13 +97,22 @@ export default class DateType extends BaseType {
 			}
 
 			this._validate(value, value, name, target);
+			this._dateInstance = new Date(value);
 			return value;
 		}
 
 		if (typeof value === 'string') {
 			this._validate(value, value, name, target);
-			this._dateInstance = null;
-			return value;
+
+			// good, let's parse it
+			const d = new Date(Date.parse(value));
+
+			if (!isValidDate(d)) {
+				throw new TypeError(`Unable to parse value "${value}" for property "${name}"`);
+			}
+
+			this._dateInstance = d;
+			return d;
 		}
 
 		if (isObject(value)) {
@@ -123,23 +139,6 @@ export default class DateType extends BaseType {
 			return this._dateInstance;
 		}
 
-		// if our value is string, then we should try to lazy initialize this string and return valid Date
-		// if parsed string is not valid Date, we'll throw an exception
-
-		let returnValue = value;
-
-		if (typeof value === 'string') {
-			// good, let's parse it
-			const d = new Date(Date.parse(value));
-
-			if (!isValidDate(d)) {
-				throw new TypeError(`Unable to parse value "${value}" for property "${name}"`);
-			}
-
-			returnValue = d;
-			this._dateInstance = d;
-		}
-
-		return super.getGetterValue(target, name, returnValue);
+		return super.getGetterValue(target, name, value);
 	}
 }

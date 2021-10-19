@@ -161,18 +161,24 @@ describe('Testing DateType', () => {
 		expect(() => Scenario7.create()).toThrowError('Invalid default value for property "date", expected string or Date, got object');
 	});
 
+	it(`Testing Date default value as string should be parsed to instance of Date`, () => {
+		expect(Scenario8.create().date).toBeInstanceOf(Date);
+	});
+
 	it(`Testing string default value`, () => {
 		expect(Scenario8.create().date.toISOString()).toBe(new Date(Date.parse('2020-05-03 22:20:02')).toISOString());
 	});
 
-	it(`Testing getter parsing error`, () => {
+	it(`Testing setter parsing error`, () => {
 		const x = Scenario1.create();
 
-		x.date = '2020-XX-YY AA:B0:CC';
-		expect(() => x.date).toThrowError('Unable to parse value "2020-XX-YY AA:B0:CC" for property "date"');
+		expect(() => {
+			x.date = '2020-XX-YY AA:B0:CC';
+		}).toThrowError('Unable to parse value "2020-XX-YY AA:B0:CC" for property "date"');
 
-		x.date = 'ABC-BLA';
-		expect(() => x.date).toThrowError('Unable to parse value "ABC-BLA" for property "date"');
+		expect(() => {
+			x.date = 'ABC-BLA';
+		}).toThrowError('Unable to parse value "ABC-BLA" for property "date"');
 	});
 
 	it(`Testing getter invalid instance`, () => {

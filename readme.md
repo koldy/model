@@ -1,7 +1,7 @@
-# Koldy Model
+# Koldy Model - Worry-free Javascript object models
 
-Koldy Model ensures correct and strict structure of Javascript object instances in runtime so you don't have to worry any more
-does it exist in data structure, is it a string or number, is it integer or float, is it undefined, null or something useful.
+Koldy Model ensures correct and strict structure of Javascript object instances in runtime so you don't have to worry
+does some property exist in data structure, is it a string or number, is it integer or float, is it undefined, null or something else.
 If you want to avoid errors such as `Uncaught TypeError: Cannot read property 'address' of undefined`, then you're in the right place.
 
 It works best with ES6 classes and it supports data structures (objects called Models) and lists (arrays) of these data structures.
