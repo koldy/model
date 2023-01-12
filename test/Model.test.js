@@ -67,6 +67,16 @@ class Scenario2 extends Model {
 	}
 }
 
+class Scenario3 extends Model {
+	definition() {
+		return {
+			_id: new AnyType(),
+			names: Names,
+			__: new ObjectType()
+		};
+	}
+}
+
 describe('Testing Model', () => {
 	it(`Testing empty instance of User`, () => {
 		expect(User.create()).toBeInstanceOf(User);
@@ -133,6 +143,14 @@ describe('Testing Model', () => {
 
 	it(`Testing displayName of Admin`, () => {
 		expect(Admin.create().displayName()).toBe('Admin');
+	});
+
+	it(`Testing properties with underscores`, () => {
+		expect(Scenario3.create()._id).toBeNull();
+		expect(Scenario3.create().__).toBeNull();
+
+		expect(Scenario3.create({_id: 5})._id).toBe(5);
+		expect(Scenario3.create({__: {a: 1}}).__).toStrictEqual({a: 1});
 	});
 
 	it(`Testing getters of Admin where all properties are null`, () => {
@@ -373,7 +391,6 @@ describe('Testing Model', () => {
 	});
 });
 
-
 class ImageData extends Model {
 	definition() {
 		return {
@@ -408,7 +425,7 @@ class ImageItem extends Model {
 		return {
 			name: new StringType(),
 			image: ImageModel
-		}
+		};
 	}
 }
 
@@ -416,7 +433,7 @@ describe('Testing Image Data scenario', () => {
 	it('Test empty model', () => {
 		const x = ImageModel.create();
 		expect(x).toBeInstanceOf(ImageModel);
-	})
+	});
 
 	it('Test partially empty data assignment', () => {
 		const item = ImageItem.create({
@@ -464,5 +481,5 @@ describe('Testing Image Data scenario', () => {
 		expect(item2.image.presentable.x1.token).toBeNull();
 		expect(item2.image.presentable.x2.publicUrl).toBeNull();
 		expect(item2.image.presentable.x2.token).toBeNull();
-	})
+	});
 });

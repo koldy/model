@@ -13,7 +13,7 @@ class Scenario1 extends Model {
 class Scenario2 extends Model {
 	definition() {
 		return {
-			_firstName: new StringType()
+			_keys: new StringType()
 		};
 	};
 }
@@ -73,7 +73,7 @@ describe('Testing Model definition errors', () => {
 	});
 
 	it(`Throw error if property's name start with underscore`, () => {
-		expect(() => Scenario2.create()).toThrowError('Can not declare property "_firstName" in Scenario2 model because it starts with underscore which is forbidden');
+		expect(() => Scenario2.create()).toThrowError('Can not declare property "_keys" in Scenario2 model because it is forbidden to be used with Koldy Model');
 	});
 
 	it(`Throw error if property's name is empty string`, () => {

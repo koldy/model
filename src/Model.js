@@ -100,9 +100,9 @@ export default class Model {
 				}
 
 				// check if property starts with underline
-				if (trim(field).charAt(0) === '_') {
+				if (['_keys', '_definition'].indexOf(field) >= 0) {
 					throw new TypeError(
-						`Can not declare property "${field}" in ${self.displayName()} model because it starts with underscore which is forbidden`
+						`Can not declare property "${field}" in ${self.displayName()} model because it is forbidden to be used with Koldy Model`
 					);
 				}
 
