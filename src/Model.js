@@ -1,4 +1,4 @@
-import {isFunction, isObject, trim} from './helpers';
+import {isFunction, isObject} from './helpers';
 import BaseType from './types/BaseType';
 import List from './List';
 
