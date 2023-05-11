@@ -423,6 +423,19 @@ export default class List {
 	}
 
 	/**
+	 * Gets the first element in array
+	 *
+	 * @returns {null|*}
+	 */
+	first() {
+		if (this.count() > 0) {
+			return this._list[0];
+		}
+
+		return null;
+	}
+
+	/**
 	 * @param {number} depth
 	 * @return {unknown[]}
 	 */
@@ -479,6 +492,19 @@ export default class List {
 	 */
 	keys() {
 		return this._list.keys();
+	}
+
+	/**
+	 * Gets the last element in array
+	 *
+	 * @returns {null|*}
+	 */
+	last() {
+		if (this.count() > 0) {
+			return this._list[this.count() - 1];
+		}
+
+		return null;
 	}
 
 	/**

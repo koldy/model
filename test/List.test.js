@@ -256,6 +256,22 @@ describe('Testing List', () => {
 		expect(b2[1]).toBeNull();
 	});
 
+	it(`Testing first and last`, () => {
+		const a = Scenario1.create();
+
+		a.push('Vlatko');
+		a.push('Koudela');
+		a.push('koldy-model');
+
+		expect(a.count()).toBe(3);
+		expect(a.length).toBe(3);
+		expect(a.first()).toBe('Vlatko');
+		expect(a.last()).toBe('koldy-model');
+
+		a.pop();
+		expect(a.last()).toBe('Koudela');
+	});
+
 	it(`Testing JSON serialization`, () => {
 		expect(JSON.stringify(Scenario1.create())).toBe(JSON.stringify([]));
 
