@@ -1,19 +1,18 @@
 declare module 'koldy-model' {
-  type DefinitionType = {[p: string]: typeof AnyType | typeof ArrayType | typeof BooleanType | typeof DateType | typeof FloatType | typeof IntegerType | typeof ObjectType | typeof StringType};
+  type DefinitionType = {[p: string]: AnyType | ArrayType | BooleanType | DateType | FloatType | IntegerType | ObjectType | StringType | typeof Model};
 
-  export class Model<T extends object> {
-    static create<X extends object>(initialData?: Partial<X>, def?: DefinitionType): X extends typeof Model;
-    // definition(): {[p in keyof T]: typeof AnyType | typeof ArrayType | typeof BooleanType | typeof DateType | typeof FloatType | typeof IntegerType | typeof ObjectType | typeof StringType};
-    definition(): {[p in keyof T]: AnyType | ArrayType | BooleanType | DateType | FloatType | IntegerType | ObjectType | StringType};
-    getDefinitions(): {[p in keyof T]: AnyType | ArrayType | BooleanType | DateType | FloatType | IntegerType | ObjectType | StringType};
-    getData(): {[p in keyof T]: any};
-    setData(data?: {[p in keyof T]: any}): void;
-    toJSON(): {[p in keyof T]: any};
-    get(name: keyof T): any;
-    set(name: keyof T, value: any): void;
-    keys(): keyof T[];
+  export class Model {
+    static create<X extends Model>(initialData?: Partial<X>, def?: DefinitionType): X;
+    definition(): DefinitionType;
+    getDefinitions(): DefinitionType;
+    getData(): {[p in keyof this]: any};
+    setData(data?: {[p in keyof this]: any}): void;
+    toJSON(): {[p in keyof this]: any};
+    get(name: string): any;
+    set(name: string, value: any): void;
+    keys(): string[];
     values(): any[];
-    hasProperty(name: keyof T): boolean;
+    hasProperty(name: string): boolean;
     seal(): void;
     isSealed(): boolean;
     freeze(): void;
@@ -21,11 +20,12 @@ declare module 'koldy-model' {
     clone(): this;
   }
 
-  export class List<M extends object> {
-    // static create(elements?: Array<{[p: string]: any} | Model>, definition?: Model | AnyType | ArrayType | BooleanType | DateType | FloatType | IntegerType | ObjectType | StringType);
+  export class List<M> {
+    static create<L extends List<X>, X extends Model>(elements?: Partial<X>[], definition?: Model | AnyType | ArrayType | BooleanType | DateType | FloatType | IntegerType | ObjectType | StringType): L;
     static of(definition?: DefinitionType);
+    length: number;
     displayName(): string;
-    definition(): Model<M>;
+    definition(): typeof Model;
     toJSON(): M[];
     getData(): M[];
     toArray(): M[];
@@ -35,28 +35,28 @@ declare module 'koldy-model' {
     reset(): void;
     count(): number;
     clone(): this;
-    mapEvery(n: number, fn: (element: M, i: number) => any, thisArg?: object): M[];
-    forEvery(n: number, fn: (element: M, i: number) => void, thisArg?: object);
+    mapEvery(n: number, fn: (element?: M, i?: number) => any, thisArg?: object): any;
+    forEvery(n: number, fn: (element?: M, i?: number) => void, thisArg?: object);
     entries(): IterableIterator<M>;
-    every(fn: (value: M, index: number, array: M[]) => boolean, thisArg?: object): boolean;
-    filter(fn: (value: M, index: number, array: M[]) => boolean, thisArg?: object): M[];
-    find(fn: (value: M, index: number, array: M[]) => boolean, thisArg?: object): M | undefined;
-    findIndex(fn: (value: M, index: number, array: M[]) => boolean, thisArg?: object): number | -1;
-    forEach(fn: (value: M, index: number, array: M[]) => boolean, thisArg?: object): void;
+    every(fn: (value?: M, index?: number, array?: M[]) => boolean, thisArg?: object): boolean;
+    filter(fn: (value?: M, index?: number, array?: M[]) => boolean, thisArg?: object): M[];
+    find(fn: (value?: M, index?: number, array?: M[]) => boolean, thisArg?: object): M | undefined;
+    findIndex(fn: (value?: M, index?: number, array?: M[]) => boolean, thisArg?: object): number | -1;
+    forEach(fn: (value?: M, index?: number, array?: M[]) => void, thisArg?: object): void;
     includes(searchElement: M, fromIndex?: number): boolean;
     indexOf(searchElement: M, fromIndex?: number): number | -1;
     join(separator?: string): string;
     keys(): IterableIterator<number>;
     lastIndexOf(searchElement: M, fromIndex?: number): number | -1;
-    map(fn: (value: M, index: number, array: M[]) => boolean, thisArg?: object): M[];
+    map(fn: (value?: M, index?: number, array?: M[]) => any, thisArg?: object): any;
     pop(): M;
-    push(element: M | {[p: string]: any}): void;
+    push(element: M | Partial<M>): void;
     reduce(fn: (accumulator: any, currentValue: M, index: number, array: M[]) => void, initialValue: any): any;
     reduceRight(fn: (accumulator: any, currentValue: M, index: number, array: M[]) => void, initialValue: any): any;
     reverse(): M[];
     shift(): M;
     slice(start?: number, end?: number): M[];
-    some(fn: (value: M, index: number, array: M[]) => boolean, thisArg?: object): boolean;
+    some(fn: (value?: M, index?: number, array?: M[]) => boolean, thisArg?: object): boolean;
     sort(compareFn: (a: M, b: M) => number): M[];
     splice(start: number, deleteCount: number, ...items: M[]): M[];
     toLocaleString(locales: string, options: {[p: string]: any}): string;
