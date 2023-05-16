@@ -548,3 +548,47 @@ list.push(false);
 list.push(true);
 console.log(list[1]); // returns true
 ```
+
+## TypeScript
+
+The TypeScript support is added from `1.2.0`. To define types in your models, do the following:
+
+```typescript
+class User extends Model {
+    firstName: string;
+	
+    definition() {
+        return {
+            firstName: new StringType().notNull()
+        };
+    }
+}
+```
+
+Since there's a limitation on TypeScript when creating a self-instanced models through static methods in class which prevents
+TypeScript from automatically detecting a correct type, you have to pass a User type to `create()` method yourself each time
+if you want to validate what's coming in:
+
+```typescript
+const user = User.create<User>({
+  firstName: 'Vlatko'
+});
+```
+
+To use a list of models with TypeScript, you have to define a list like this:
+
+```typescript
+class Users extends List<User> {
+    definition() {
+        return User;
+    }
+}
+```
+
+Then, to create a new list of users, you'll have to pass both types to create method like this:
+
+```typescript
+const users = Users.create<Users, User>([
+	{firstName: 'Vlatko'}
+]);
+```
