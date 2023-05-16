@@ -79,11 +79,11 @@ bugfixed by: Onno Marsman (https://twitter.com/onnomarsman)
   example 3: trim(16, 1)
   returns 3: '6'
  *
- * @param str
+ * @param {string} str
  * @param charlist
  * @return {string}
  */
-export const trim = function (str, charlist) {
+export const trim = function (str, charlist = undefined) {
 	if (str.length === 0) {
 		return '';
 	}

@@ -423,23 +423,6 @@ export default class List {
 	}
 
 	/**
-	 * @param {number} depth
-	 * @return {unknown[]}
-	 */
-	flat(depth) {
-		return this._list.flat(depth);
-	}
-
-	/**
-	 * @param {function} fn
-	 * @param {{}} thisArg
-	 * @return {boolean}
-	 */
-	flatMap(fn, thisArg) {
-		return this._list.flatMap(fn, thisArg);
-	}
-
-	/**
 	 * @param {function} fn
 	 * @param {{}} thisArg
 	 * @return {boolean}
