@@ -1,5 +1,5 @@
 declare module 'koldy-model' {
-	type DefinitionType = {[p: string]: AnyType | ArrayType | BooleanType | DateType | FloatType | IntegerType | ObjectType | StringType | typeof Model};
+	type DefinitionType = {[p: string]: AnyType | ArrayType | BooleanType | DateType | FloatType | IntegerType | ObjectType | StringType | typeof Model | typeof List<Model>};
 
 	export class Model {
 		static create<X extends Model>(initialData?: Partial<X>, def?: DefinitionType): X;
