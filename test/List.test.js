@@ -112,12 +112,10 @@ describe('Testing List', () => {
 
 	it(`Testing invalid type errors`, () => {
 		const x = Scenario1.create(['Vlatko']);
-		expect(() => (x[0] = {})).toThrowError('Error adding element in Scenario1: Expecting list element to be String, got object');
-		expect(() => (x[0] = [])).toThrowError('Error adding element in Scenario1: Expecting list element to be String, got array');
-		expect(() => (x[0] = true)).toThrowError('Error adding element in Scenario1: Expecting list element to be String, got boolean');
-		expect(() => (x[0] = function () {})).toThrowError(
-			'Error adding element in Scenario1: Expecting list element to be String, got function'
-		);
+		expect(() => (x[0] = {})).toThrowError('Expecting list element to be String, got object');
+		expect(() => (x[0] = [])).toThrowError('Expecting list element to be String, got array');
+		expect(() => (x[0] = true)).toThrowError('Expecting list element to be String, got boolean');
+		expect(() => (x[0] = function () {})).toThrowError('Expecting list element to be String, got function');
 	});
 
 	it(`Testing other type errors`, () => {
@@ -183,9 +181,7 @@ describe('Testing List', () => {
 
 		expect(a[1].city).toBe('Slavonski Brod');
 
-		expect(() => a.push(Person.create({firstName: 'Vlatko'}))).toThrowError(
-			'Error adding element in Scenario3: Expected instance of "Address", got instance of "Person"'
-		);
+		expect(() => a.push(Person.create({firstName: 'Vlatko'}))).toThrowError('Expected instance of "Address", got instance of "Person"');
 		expect(a[2]).toBeNull();
 	});
 
@@ -310,7 +306,7 @@ describe('Testing List', () => {
 
 	it(`Testing anonymous List`, () => {
 		const a = List.create([], new BooleanType());
-		expect(() => a.push('Vlatko')).toThrowError('Error adding element in List: Expecting "list element" to be boolean, got string');
+		expect(() => a.push('Vlatko')).toThrowError('Expecting "list element" to be boolean, got string');
 	});
 
 	it(`Testing getting definition`, () => {
@@ -343,11 +339,24 @@ describe('Testing List', () => {
 		const list = Scenario1.create(['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']);
 
 		expect(list.length).toBe(12);
-		expect(list.map((x) => x)).toStrictEqual(['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']);
+		expect(list.map((x) => x)).toStrictEqual([
+			'one',
+			'two',
+			'three',
+			'four',
+			'five',
+			'six',
+			'seven',
+			'eight',
+			'nine',
+			'ten',
+			'eleven',
+			'twelve'
+		]);
 		expect(list.mapEvery(4, (x) => x)).toStrictEqual(['one', 'five', 'nine']);
 
 		let total = 0;
-		const r = list.forEvery(4, (x, i) => total += i);
+		const r = list.forEvery(4, (x, i) => (total += i));
 		expect(r).toBeUndefined();
 		expect(total).toBe(12);
 

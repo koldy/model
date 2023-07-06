@@ -201,45 +201,41 @@ export default class List {
 	_parse(element) {
 		const {type, def, name} = this._getDefinitionInfo();
 
-		try {
-			switch (type) {
-				case BASE_TYPE:
-					return def.getSetterValue({}, 'list element', element);
+		switch (type) {
+			case BASE_TYPE:
+				return def.getSetterValue({}, 'list element', element);
 
-				case MODEL_INSTANCE:
-					if (element instanceof def) {
-						return element;
-					}
+			case MODEL_INSTANCE:
+				if (element instanceof def) {
+					return element;
+				}
 
-					if (isObject(element) && !(element instanceof Model)) {
-						return def.create(element);
-					}
+				if (isObject(element) && !(element instanceof Model)) {
+					return def.create(element);
+				}
 
-					if (isObject(element) && element instanceof Model) {
-						throw new TypeError(`Expected instance of "${name}", got instance of "${element.displayName()}"`);
-					}
+				if (isObject(element) && element instanceof Model) {
+					throw new TypeError(`Expected instance of "${name}", got instance of "${element.displayName()}"`);
+				}
 
-					throw new TypeError(`Expected instance of "${name}"`);
+				throw new TypeError(`Expected instance of "${name}"`);
 
-				case LIST_TYPE:
-					if (element instanceof def) {
-						return element;
-					}
+			case LIST_TYPE:
+				if (element instanceof def) {
+					return element;
+				}
 
-					if (isObject(element) && !(element instanceof List)) {
-						return def.create(element);
-					}
+				if (isObject(element) && !(element instanceof List)) {
+					return def.create(element);
+				}
 
-					if (isObject(element) && element instanceof List) {
-						throw new TypeError(`Expected instance of "${name}", got instance of "${element.displayName()}"`);
-					}
+				if (isObject(element) && element instanceof List) {
+					throw new TypeError(`Expected instance of "${name}", got instance of "${element.displayName()}"`);
+				}
 
-					throw new TypeError(`Expected instance of "${name}"`);
+				throw new TypeError(`Expected instance of "${name}"`);
 
-				// no default
-			}
-		} catch (caughtError) {
-			throw new TypeError(`Error adding element in ${this.displayName()}: ${caughtError.message}`);
+			// no default
 		}
 	}
 
@@ -270,11 +266,7 @@ export default class List {
 		const theList = [];
 
 		data.forEach((element, i) => {
-			try {
-				theList.push(this._parse(element));
-			} catch (e) {
-				throw new TypeError(`Error in ${this.displayName()}.setData() on position ${i}: ${e.message}`);
-			}
+			theList.push(this._parse(element));
 		});
 
 		this._list = theList;

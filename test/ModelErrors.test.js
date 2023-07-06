@@ -7,7 +7,7 @@ class Scenario1 extends Model {
 			firstName: new StringType(),
 			getData: new StringType()
 		};
-	};
+	}
 }
 
 class Scenario2 extends Model {
@@ -15,7 +15,7 @@ class Scenario2 extends Model {
 		return {
 			_keys: new StringType()
 		};
-	};
+	}
 }
 
 class Scenario3 extends Model {
@@ -23,7 +23,7 @@ class Scenario3 extends Model {
 		return {
 			'': new StringType()
 		};
-	};
+	}
 }
 
 class Scenario4 extends Model {
@@ -32,7 +32,7 @@ class Scenario4 extends Model {
 			' ': new StringType(),
 			'  ': new StringType()
 		};
-	};
+	}
 }
 
 class Scenario5 extends Model {
@@ -40,7 +40,7 @@ class Scenario5 extends Model {
 		return {
 			'  _': new StringType()
 		};
-	};
+	}
 }
 
 class Scenario6 extends Model {
@@ -48,7 +48,7 @@ class Scenario6 extends Model {
 		return {
 			'x_ ': new StringType()
 		};
-	};
+	}
 }
 
 class Scenario7 extends Model {}
@@ -69,11 +69,15 @@ class Scenario9 extends Model {
 
 describe('Testing Model definition errors', () => {
 	it(`Throw error on method redeclaration`, () => {
-		expect(() => Scenario1.create()).toThrowError('Can not redeclare property "getData" because there is a method with the same name in Scenario1 model');
+		expect(() => Scenario1.create()).toThrowError(
+			'Can not redeclare property "getData" because there is a method with the same name in Scenario1 model'
+		);
 	});
 
 	it(`Throw error if property's name start with underscore`, () => {
-		expect(() => Scenario2.create()).toThrowError('Can not declare property "_keys" in Scenario2 model because it is forbidden to be used with Koldy Model');
+		expect(() => Scenario2.create()).toThrowError(
+			'Can not declare property "_keys" in Scenario2 model because it is forbidden to be used with Koldy Model'
+		);
 	});
 
 	it(`Throw error if property's name is empty string`, () => {
@@ -85,15 +89,21 @@ describe('Testing Model definition errors', () => {
 	});
 
 	it(`Throw error if property's name is string with spaces and has underscore`, () => {
-		expect(() => Scenario5.create()).toThrowError('Can not declare property "  _" in Scenario5 model because it contains one or more spaces');
+		expect(() => Scenario5.create()).toThrowError(
+			'Can not declare property "  _" in Scenario5 model because it contains one or more spaces'
+		);
 	});
 
 	it(`Throw error if property's name is string with spaces and has underscore`, () => {
-		expect(() => Scenario6.create()).toThrowError('Can not declare property "x_ " in Scenario6 model because it contains one or more spaces');
+		expect(() => Scenario6.create()).toThrowError(
+			'Can not declare property "x_ " in Scenario6 model because it contains one or more spaces'
+		);
 	});
 
 	it(`Throw error if class model has no definition method overridden`, () => {
-		expect(() => Scenario7.create()).toThrowError('Scenario7 definition() method must return object, got null instead; definition() method is probably not defined');
+		expect(() => Scenario7.create()).toThrowError(
+			'Scenario7 definition() method must return object, got null instead; definition() method is probably not defined'
+		);
 	});
 
 	it(`Throw error if class model definition returns non-object`, () => {
@@ -101,6 +111,6 @@ describe('Testing Model definition errors', () => {
 	});
 
 	it(`Throw error if class model definition returns standard function for definition`, () => {
-		expect(() => Scenario9.create()).toThrowError('Functions are not supported as type definition');
+		expect(() => Scenario9.create()).toThrowError('definition.create is not a function');
 	});
 });

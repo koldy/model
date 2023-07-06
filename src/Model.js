@@ -64,9 +64,8 @@ export default class Model {
 					// if this is a function, let's try to initialize it and the check it if its instance of model... if not, then we'll throw an error
 					let propInstance = null;
 
-					try {
-						propInstance = definition.create(initialData[field]);
-					} catch (ignored) {}
+					// try to create; this will throw an exception if possible
+					propInstance = definition.create(initialData[field]);
 
 					if (!(propInstance instanceof Model) && !(propInstance instanceof List)) {
 						throw new TypeError('Functions are not supported as type definition');
