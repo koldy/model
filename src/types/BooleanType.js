@@ -57,6 +57,16 @@ export default class BooleanType extends BaseType {
 			throw new TypeError(`Expecting "${name}" to be boolean, got array`);
 		}
 
+		if (typeof value === 'string' && (value.length === 4 || value.length === 5)) {
+			if (value.toLowerCase() === 'true') {
+				return true;
+			}
+
+			if (value.toLowerCase() === 'false') {
+				return false;
+			}
+		}
+
 		if (['symbol', 'function', 'string', 'number', 'bigint'].indexOf(typeof value) >= 0) {
 			throw new TypeError(`Expecting "${name}" to be boolean, got ${typeof value}`);
 		}

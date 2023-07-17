@@ -105,6 +105,25 @@ describe('Testing BooleanType', () => {
 		expect(() => Scenario4.create({ok: null})).toThrowError('Property "ok" should be boolean and never null');
 	});
 
+  it(`Testing setting boolean as string`, () => {
+    expect(Scenario4.create().ok).toBeTruthy();
+    expect(Scenario4.create({ok: 'true'}).ok).toBeTruthy();
+    expect(Scenario4.create({ok: 'false'}).ok).toBeFalsy();
+    expect(Scenario4.create({ok: 'TRUE'}).ok).toBeTruthy();
+    expect(Scenario4.create({ok: 'FALSE'}).ok).toBeFalsy();
+    expect(Scenario4.create({ok: 'TruE'}).ok).toBeTruthy();
+    expect(Scenario4.create({ok: 'FalsE'}).ok).toBeFalsy();
+    expect(() => Scenario4.create({ok: null})).toThrowError('Property "ok" should be boolean and never null');
+
+    const x = Scenario4.create();
+
+    x.ok = 'FAlSE';
+    expect(x.ok).toBeFalsy();
+
+    x.ok = 'True';
+    expect(x.ok).toBeTruthy();
+  });
+
 	it(`Testing custom validator`, () => {
 		expect(Scenario5.create().ok).toBeTruthy();
 		expect(Scenario5.create({ok: undefined}).ok).toBeTruthy();
