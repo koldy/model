@@ -6,7 +6,7 @@ declare module 'koldy-model' {
 		definition(): DefinitionType;
 		getDefinitions(): DefinitionType;
 		getData(): {[p in keyof this]: any};
-		setData(data?: {[p in keyof this]: any}): void;
+		setData(data?: Partial<{[p in keyof this]: any}>): void;
 		toJSON(): {[p in keyof this]: any};
 		get(name: string): any;
 		set(name: string, value: any): void;

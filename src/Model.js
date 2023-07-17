@@ -217,7 +217,7 @@ export default class Model {
 
 		Object.keys(givenData).forEach((key) => {
 			if (this._keys.indexOf(key) >= 0) {
-				// ^^ accept only keys from definition, ignore all other
+				// ^^ accept only keys from definition, ignore all the others
 
 				if (isObject(this[key]) && (this[key] instanceof Model || this[key] instanceof List)) {
 					this[key].setData(givenData[key]);
