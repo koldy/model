@@ -167,10 +167,19 @@ export default class FloatType extends BaseType {
 		}
 
 		if (typeof value === 'string') {
-			returnValue = Number.parseFloat(value);
+			if (value.length === 0) {
+				// it's an empty string
+				if (this._acceptsNull) {
+					return null;
+				} else {
+					throw new TypeError(`Can not assign empty string to non-nullable FloatType property "${name}"`);
+				}
+			} else {
+				returnValue = Number.parseFloat(value);
 
-			if (Number.isNaN(returnValue)) {
-				throw new TypeError(`Failed to parse string "${value}" to integer`);
+				if (Number.isNaN(returnValue)) {
+					throw new TypeError(`Failed to parse string "${value}" to integer`);
+				}
 			}
 		}
 

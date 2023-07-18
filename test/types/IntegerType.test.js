@@ -6,7 +6,7 @@ class Scenario1 extends Model {
 		return {
 			count: new IntegerType()
 		};
-	};
+	}
 }
 
 class Scenario2 extends Model {
@@ -14,7 +14,7 @@ class Scenario2 extends Model {
 		return {
 			count: new IntegerType(55)
 		};
-	};
+	}
 }
 
 class Scenario3 extends Model {
@@ -22,7 +22,7 @@ class Scenario3 extends Model {
 		return {
 			count: new IntegerType().notNull()
 		};
-	};
+	}
 }
 
 class Scenario4 extends Model {
@@ -30,7 +30,7 @@ class Scenario4 extends Model {
 		return {
 			count: new IntegerType(77).notNull()
 		};
-	};
+	}
 }
 
 class Scenario5 extends Model {
@@ -46,7 +46,7 @@ class Scenario5 extends Model {
 				}
 			})
 		};
-	};
+	}
 }
 
 class Scenario6 extends Model {
@@ -62,39 +62,42 @@ class Scenario6 extends Model {
 				}
 			})
 		};
-	};
+	}
 }
 
 class Scenario7 extends Model {
 	definition() {
 		return {
-			count: new IntegerType(65).notNull().between(70, 80).withCustomValidator(function ({value}) {
-				if (value < 60) {
-					throw new TypeError('Count should not be less than 55');
-				}
+			count: new IntegerType(65)
+				.notNull()
+				.between(70, 80)
+				.withCustomValidator(function ({value}) {
+					if (value < 60) {
+						throw new TypeError('Count should not be less than 55');
+					}
 
-				if (value > 90) {
-					throw new TypeError('Count should not be greater than 77');
-				}
-			})
+					if (value > 90) {
+						throw new TypeError('Count should not be greater than 77');
+					}
+				})
 		};
-	};
+	}
 }
 
 class Scenario8 extends Model {
-  definition() {
-    return {
-      count: new IntegerType().min('5')
-    };
-  }
+	definition() {
+		return {
+			count: new IntegerType().min('5')
+		};
+	}
 }
 
 class Scenario9 extends Model {
-  definition() {
-    return {
-      count: new IntegerType().max('5')
-    };
-  }
+	definition() {
+		return {
+			count: new IntegerType().max('5')
+		};
+	}
 }
 
 describe('Testing IntegerType', () => {
@@ -166,8 +169,12 @@ describe('Testing IntegerType', () => {
 	});
 
 	it(`Testing not null`, () => {
-		expect(() => Scenario3.create({count: undefined})).toThrowError('Property "count" shouldn\'t be null and its default value is null which is not acceptable');
-		expect(() => Scenario3.create({count: null})).toThrowError('Property "count" shouldn\'t be null and its default value is null which is not acceptable');
+		expect(() => Scenario3.create({count: undefined})).toThrowError(
+			'Property "count" shouldn\'t be null and its default value is null which is not acceptable'
+		);
+		expect(() => Scenario3.create({count: null})).toThrowError(
+			'Property "count" shouldn\'t be null and its default value is null which is not acceptable'
+		);
 		expect(Scenario3.create({count: 0}).count).toBe(0);
 	});
 
@@ -187,5 +194,19 @@ describe('Testing IntegerType', () => {
 	it(`Testing wrong min/max definition`, () => {
 		expect(() => Scenario8.create()).toThrowError('Given minimum value for IntegerType is not valid number; expected number, got string');
 		expect(() => Scenario9.create()).toThrowError('Given maximum value for IntegerType is not valid number; expected number, got string');
+	});
+
+	it(`Testing assign string and empty string`, () => {
+		expect(Scenario2.create({count: ''}).count).toBeNull();
+		expect(() => Scenario3.create({count: ''})).toThrowError('Can not assign empty string to non-nullable IntegerType property "count"');
+
+		const s2 = Scenario2.create();
+		s2.count = '';
+		expect(s2.count).toBeNull();
+
+		const s4 = Scenario4.create();
+		expect(() => {
+			s4.count = '';
+		}).toThrowError('Can not assign empty string to non-nullable IntegerType property "count"');
 	});
 });

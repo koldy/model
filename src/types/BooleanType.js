@@ -49,7 +49,7 @@ export default class BooleanType extends BaseType {
 			return null;
 		}
 
-		if (isObject(value)) {
+		if (typeof value !== 'function' && isObject(value)) {
 			throw new TypeError(`Expecting "${name}" to be boolean, got object`);
 		}
 
@@ -57,13 +57,21 @@ export default class BooleanType extends BaseType {
 			throw new TypeError(`Expecting "${name}" to be boolean, got array`);
 		}
 
-		if (typeof value === 'string' && (value.length === 4 || value.length === 5)) {
-			if (value.toLowerCase() === 'true') {
-				return true;
-			}
+		if (typeof value === 'string') {
+			if (value.length === 0) {
+				if (this._acceptsNull) {
+					return null;
+				} else {
+					throw new TypeError(`Can not assign empty string to non-nullable BooleanType property "${name}"`);
+				}
+			} else {
+				if (value.toLowerCase() === 'true') {
+					return true;
+				}
 
-			if (value.toLowerCase() === 'false') {
-				return false;
+				if (value.toLowerCase() === 'false') {
+					return false;
+				}
 			}
 		}
 

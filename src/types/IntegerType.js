@@ -112,10 +112,19 @@ export default class IntegerType extends BaseType {
 		}
 
 		if (typeof value === 'string') {
-			returnValue = Number.parseInt(value, 10);
+			if (value.length === 0) {
+				// it's empty string
+				if (this._acceptsNull) {
+					return null;
+				} else {
+					throw new TypeError(`Can not assign empty string to non-nullable IntegerType property "${name}"`);
+				}
+			} else {
+				returnValue = Number.parseInt(value, 10);
 
-			if (Number.isNaN(returnValue)) {
-				throw new TypeError(`Failed to parse string "${value}" to integer`);
+				if (Number.isNaN(returnValue)) {
+					throw new TypeError(`Failed to parse string "${value}" to integer`);
+				}
 			}
 		}
 

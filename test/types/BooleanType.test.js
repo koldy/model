@@ -105,24 +105,47 @@ describe('Testing BooleanType', () => {
 		expect(() => Scenario4.create({ok: null})).toThrowError('Property "ok" should be boolean and never null');
 	});
 
-  it(`Testing setting boolean as string`, () => {
-    expect(Scenario4.create().ok).toBeTruthy();
-    expect(Scenario4.create({ok: 'true'}).ok).toBeTruthy();
-    expect(Scenario4.create({ok: 'false'}).ok).toBeFalsy();
-    expect(Scenario4.create({ok: 'TRUE'}).ok).toBeTruthy();
-    expect(Scenario4.create({ok: 'FALSE'}).ok).toBeFalsy();
-    expect(Scenario4.create({ok: 'TruE'}).ok).toBeTruthy();
-    expect(Scenario4.create({ok: 'FalsE'}).ok).toBeFalsy();
-    expect(() => Scenario4.create({ok: null})).toThrowError('Property "ok" should be boolean and never null');
+	it(`Testing setting boolean as string`, () => {
+		expect(Scenario4.create().ok).toBeTruthy();
+		expect(Scenario4.create({ok: 'true'}).ok).toBeTruthy();
+		expect(Scenario4.create({ok: 'false'}).ok).toBeFalsy();
+		expect(Scenario4.create({ok: 'TRUE'}).ok).toBeTruthy();
+		expect(Scenario4.create({ok: 'FALSE'}).ok).toBeFalsy();
+		expect(Scenario4.create({ok: 'TruE'}).ok).toBeTruthy();
+		expect(Scenario4.create({ok: 'FalsE'}).ok).toBeFalsy();
+		expect(() => Scenario4.create({ok: ''})).toThrowError('Can not assign empty string to non-nullable BooleanType property "ok"');
+		expect(() => Scenario4.create({ok: 'falsy'})).toThrowError('Expecting "ok" to be boolean, got string');
 
-    const x = Scenario4.create();
+		const s4 = Scenario4.create();
+		s4.ok = 'TruE';
+		expect(s4.ok).toBeTruthy();
+		s4.ok = 'FalSE';
+		expect(s4.ok).toBeFalsy();
+		expect(() => (s4.ok = 'nothing')).toThrowError('Expecting "ok" to be boolean, got string');
+		expect(() => (s4.ok = 5)).toThrowError('Expecting "ok" to be boolean, got number');
 
-    x.ok = 'FAlSE';
-    expect(x.ok).toBeFalsy();
+		expect(Scenario3.create({ok: 'true'}).ok).toBeTruthy();
+		expect(Scenario3.create({ok: 'false'}).ok).toBeFalsy();
+		expect(Scenario3.create({ok: 'TRUE'}).ok).toBeTruthy();
+		expect(Scenario3.create({ok: 'FALSE'}).ok).toBeFalsy();
+		expect(Scenario3.create({ok: 'TruE'}).ok).toBeTruthy();
+		expect(Scenario3.create({ok: 'FalsE'}).ok).toBeFalsy();
+		expect(Scenario3.create({ok: ''}).ok).toBeNull();
+		expect(() => Scenario3.create({ok: 'falsy'})).toThrowError('Expecting "ok" to be boolean, got string');
 
-    x.ok = 'True';
-    expect(x.ok).toBeTruthy();
-  });
+		const s3 = Scenario3.create();
+		s3.ok = 'TruE';
+		expect(s3.ok).toBeTruthy();
+		s3.ok = 'FalSE';
+		expect(s3.ok).toBeFalsy();
+		s3.ok = '';
+		expect(s3.ok).toBeNull();
+		expect(() => (s3.ok = 'nothing')).toThrowError('Expecting "ok" to be boolean, got string');
+		expect(() => (s3.ok = 7)).toThrowError('Expecting "ok" to be boolean, got number');
+		expect(() => (s3.ok = () => {})).toThrowError('Expecting "ok" to be boolean, got function');
+
+		expect(() => Scenario4.create({ok: null})).toThrowError('Property "ok" should be boolean and never null');
+	});
 
 	it(`Testing custom validator`, () => {
 		expect(Scenario5.create().ok).toBeTruthy();

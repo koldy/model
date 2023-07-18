@@ -250,4 +250,17 @@ describe('Testing FloatType', () => {
 		expect(() => Scenario13.create()).toThrowError('Given decimals value for FloatType should be positive integer; got -1');
 	});
 
+  it(`Testing assign string and empty string`, () => {
+    expect(Scenario2.create({count: ''}).count).toBeNull();
+    expect(() => Scenario3.create({count: ''})).toThrowError('Can not assign empty string to non-nullable FloatType property "count"');
+
+    const s2 = Scenario2.create();
+    s2.count = '';
+    expect(s2.count).toBeNull();
+
+    const s4 = Scenario4.create();
+    expect(() => {
+      s4.count = '';
+    }).toThrowError('Can not assign empty string to non-nullable FloatType property "count"');
+  });
 });
