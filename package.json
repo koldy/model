@@ -1,6 +1,6 @@
 {
 	"name": "koldy-model",
-	"version": "1.2.6",
+	"version": "1.2.7",
 	"description": "Worry-free JS object models",
 	"main": "lib/index.js",
 	"module": "esm/index.js",

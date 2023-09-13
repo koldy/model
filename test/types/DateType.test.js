@@ -69,6 +69,10 @@ class Scenario8 extends Model {
 			date: new DateType('2020-05-03 22:20:02')
 		};
 	}
+
+	getTheDate() {
+		return this.date;
+	}
 }
 
 describe('Testing DateType', () => {
@@ -82,7 +86,7 @@ describe('Testing DateType', () => {
 	});
 
 	it(`Testing invalid value`, () => {
-		expect(() => Scenario1.create({date: 'XXX'}).date).toThrowError('Unable to parse value "XXX" for property "date"');
+		expect(() => Scenario1.create({date: 'XXX'}).date).toThrowError('Can not parse date string [XXX] into Date object for property "date"');
 		expect(() => Scenario1.create({date: true}).date).toThrowError('Expecting "date" to be string or Date, got boolean');
 		expect(() => Scenario1.create({date: {}}).date).toThrowError('Expecting "date" to be string or Date, got object');
 		expect(() => Scenario1.create({date: []}).date).toThrowError('Expecting "date" to be string or Date, got array');
@@ -168,14 +172,21 @@ describe('Testing DateType', () => {
 	it(`Testing getter parsing error`, () => {
 		const x = Scenario1.create();
 
-		x.date = '2020-XX-YY AA:B0:CC';
-		expect(() => x.date).toThrowError('Unable to parse value "2020-XX-YY AA:B0:CC" for property "date"');
+		expect(() => (x.date = '2020-XX-YY AA:B0:CC')).toThrowError(
+			'Can not parse date string [2020-XX-YY AA:B0:CC] into Date object for property "date"'
+		);
 
-		x.date = 'ABC-BLA';
-		expect(() => x.date).toThrowError('Unable to parse value "ABC-BLA" for property "date"');
+		expect(() => (x.date = 'ABC-BLA')).toThrowError('Can not parse date string [ABC-BLA] into Date object for property "date"');
 	});
 
 	it(`Testing getter invalid instance`, () => {
 		expect(() => (Scenario1.create().date = new Date('ABC'))).toThrowError('Property "date" got invalid instance of Date');
+	});
+
+	it(`Testing method getter`, () => {
+		const instance = Scenario8.create();
+		expect(instance.date).toBeInstanceOf(Date);
+		expect(instance.getTheDate()).toBeInstanceOf(Date);
+		expect(instance.date).toBe(instance.getTheDate());
 	});
 });

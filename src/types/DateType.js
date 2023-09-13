@@ -52,9 +52,14 @@ export default class DateType extends BaseType {
 			}
 
 			if (typeof defaultValue === 'string') {
+				const d = new Date(Date.parse(defaultValue));
+				if (!isValidDate(d)) {
+					throw new TypeError(`The default value [${defaultValue}] for property "${name}" couldn't be converted to instance of Date`);
+				}
+
 				this._validate(defaultValue, value, name, target);
-				this._dateInstance = null;
-				return defaultValue;
+				this._dateInstance = d;
+				return d;
 			}
 
 			if (defaultValue instanceof Date) {
@@ -90,13 +95,20 @@ export default class DateType extends BaseType {
 			}
 
 			this._validate(value, value, name, target);
+			this._dateInstance = value;
 			return value;
 		}
 
 		if (typeof value === 'string') {
+			const d = new Date(Date.parse(value));
+
+			if (!isValidDate(d)) {
+				throw new TypeError(`Can not parse date string [${value}] into Date object for property "${name}"`);
+			}
+
 			this._validate(value, value, name, target);
-			this._dateInstance = null;
-			return value;
+			this._dateInstance = d;
+			return d;
 		}
 
 		if (isObject(value)) {
