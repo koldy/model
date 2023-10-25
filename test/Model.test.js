@@ -500,3 +500,91 @@ describe('Testing Image Data scenario', () => {
 		expect(item2.image.presentable.x2.token).toBeNull();
 	});
 });
+
+describe(`List in List in Model null assignments test`, () => {
+	class Thumbnail extends Model {
+		definition() {
+			return {
+				width: new IntegerType(),
+				height: new IntegerType()
+			};
+		}
+	}
+
+	class Thumbnails extends List {
+		definition() {
+			return Thumbnail;
+		}
+	}
+
+	class Photo extends Model {
+		definition() {
+			return {
+				src: new StringType(),
+				thumbnails: Thumbnails
+			};
+		}
+	}
+
+	class Account extends Model {
+		definition() {
+			return {
+				name: new StringType(),
+				profilePhoto: Photo
+			};
+		}
+	}
+
+	it('Quick test Thumbnails example', () => {
+		expect(Thumbnails.create()).toBeInstanceOf(Thumbnails);
+	});
+
+	it('Quick test Photo example', () => {
+		expect(Photo.create()).toBeInstanceOf(Photo);
+		expect(Photo.create().thumbnails).toBeInstanceOf(Thumbnails);
+
+		const p = Photo.create();
+		expect(p.thumbnails).toBeInstanceOf(Thumbnails);
+		p.thumbnails = null;
+		expect(p.thumbnails).toBeInstanceOf(Thumbnails);
+	});
+
+	it('Quick test Account example', () => {
+		const a = Account.create();
+		expect(a).toBeInstanceOf(Account);
+		expect(a.profilePhoto).toBeInstanceOf(Photo);
+		expect(a.profilePhoto.thumbnails).toBeInstanceOf(Thumbnails);
+	});
+
+	it('Account example test with null', () => {
+		const a = Account.create({
+			name: 'John Doe',
+			profilePhoto: null
+		});
+		expect(a).toBeInstanceOf(Account);
+		expect(a.profilePhoto).toBeInstanceOf(Photo);
+		expect(a.profilePhoto.thumbnails).toBeInstanceOf(Thumbnails);
+	});
+
+	it('Account example test with undefined', () => {
+		const a = Account.create({
+			name: 'John Doe',
+			profilePhoto: undefined
+		});
+		expect(a).toBeInstanceOf(Account);
+		expect(a.profilePhoto).toBeInstanceOf(Photo);
+		expect(a.profilePhoto.thumbnails).toBeInstanceOf(Thumbnails);
+	});
+
+	it('Account example test with nested null', () => {
+		const a = Account.create({
+			name: 'John Doe',
+			profilePhoto: {
+				thumbnails: null
+			}
+		});
+		expect(a).toBeInstanceOf(Account);
+		expect(a.profilePhoto).toBeInstanceOf(Photo);
+		expect(a.profilePhoto.thumbnails).toBeInstanceOf(Thumbnails);
+	});
+});

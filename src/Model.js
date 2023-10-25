@@ -18,9 +18,11 @@ export default class Model {
 	_definitions = {};
 
 	/**
-	 * @param {{}} data
+	 * @param {{}} initialData
 	 */
-	constructor(data = {}) {
+	constructor(initialData = null) {
+		const data = isObject(initialData) ? initialData : {};
+
 		if (isObject(data) && typeof data.__KOLDY_MODEL_USE_ONLY__ === 'boolean' && data.__KOLDY_MODEL_USE_ONLY__ === true) {
 			// it's fine
 		} else {
@@ -31,11 +33,11 @@ export default class Model {
 	}
 
 	/**
-	 * @param {{}} initialData
+	 * @param {{}|null|undefined} initialData
 	 * @param {{}|null} def
 	 * @return {this}
 	 */
-	static create(initialData = {}, def = null) {
+	static create(initialData = null, def = null) {
 		const self = new this({__KOLDY_MODEL_USE_ONLY__: true});
 		const givenData = isObject(initialData) ? initialData : {};
 
@@ -58,8 +60,8 @@ export default class Model {
 			const definition = self._definitions[field];
 
 			if (isFunction(definition)) {
-				if (initialData[field] instanceof definition) {
-					self[field] = initialData[field];
+				if (givenData[field] instanceof definition) {
+					self[field] = givenData[field];
 				} else {
 					if (typeof definition.create !== 'function') {
 						throw new TypeError(
@@ -68,10 +70,8 @@ export default class Model {
 					}
 
 					// if this is a function, let's try to initialize it and the check it if its instance of model... if not, then we'll throw an error
-					let propInstance = null;
-
 					// try to create; this will throw an exception if possible
-					propInstance = definition.create(initialData[field]);
+					let propInstance = definition.create(givenData[field]);
 
 					if (!(propInstance instanceof Model) && !(propInstance instanceof List)) {
 						throw new TypeError('Functions are not supported as type definition');
