@@ -33,6 +33,26 @@ export const isBool = function (x) {
 	return typeof x === 'boolean';
 };
 
+export const typeName = function (x) {
+	if (x === undefined) {
+		return 'undefined';
+	}
+
+	if (x === null) {
+		return 'null';
+	}
+
+	if (isObject(x)) {
+		return 'object';
+	}
+
+	if (isArray(x)) {
+		return 'array';
+	}
+
+	return typeof x;
+};
+
 /**
  * Returns true if given date is really instance of Date and that instance is not "Invalid Date". Simple check with "instanceof" is not enough in
  * this case.

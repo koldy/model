@@ -61,6 +61,12 @@ export default class Model {
 				if (initialData[field] instanceof definition) {
 					self[field] = initialData[field];
 				} else {
+					if (typeof definition.create !== 'function') {
+						throw new TypeError(
+							`${self.displayName()}.definition() method returned an object with property "${field}" that's not a valid definition type`
+						);
+					}
+
 					// if this is a function, let's try to initialize it and the check it if its instance of model... if not, then we'll throw an error
 					let propInstance = null;
 

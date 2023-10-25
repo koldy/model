@@ -389,6 +389,23 @@ describe('Testing Model', () => {
 		x.freeze();
 		expect(x.isFrozen()).toBeTruthy();
 	});
+
+	it(`Testing function definition as invalid case`, () => {
+		expect(() => {
+			class InvalidDefinitionCase extends Model {
+				definition() {
+					return {
+						id: new IntegerType(),
+						name: function () {}
+					};
+				}
+			}
+
+			InvalidDefinitionCase.create();
+		}).toThrowError(
+			'InvalidDefinitionCase.definition() method returned an object with property "name" that\'s not a valid definition type'
+		);
+	});
 });
 
 class ImageData extends Model {

@@ -1,4 +1,4 @@
-import {isObject, isArray, isFunction} from './helpers';
+import {isObject, isArray, isFunction, typeName} from './helpers';
 import Model from './Model';
 import BaseType from './types/BaseType';
 
@@ -47,7 +47,14 @@ export default class List {
 		const self = new this({__KOLDY_MODEL_USE_ONLY__: true});
 
 		if (!isArray(data)) {
-			throw new TypeError(`Expected array for ${self.displayName()}.create(), got ${typeof data}`);
+			// if we didn't get the array, other variation could be that the undefined or null are given
+			// in that case, we will skip the undefined and null and we'll treat that as an empty array
+			if (data === undefined || data === null) {
+				data = [];
+			} else {
+				// otherwise, throw an error
+				throw new TypeError(`Expected array for ${self.displayName()}.create(), got ${typeName(data)}`);
+			}
 		}
 
 		self._definition = def || self.definition();
@@ -260,7 +267,14 @@ export default class List {
 		}
 
 		if (!isArray(data)) {
-			throw new TypeError(`Expected array for ${this.displayName()}.setData(), got ${typeof data}`);
+			// if we didn't get the array, other variation could be that the undefined or null are given
+			// in that case, we will skip the undefined and null and we'll treat that as an empty array
+			if (data === undefined || data === null) {
+				data = [];
+			} else {
+				// otherwise, throw an error
+				throw new TypeError(`Expected array for ${this.displayName()}.setData(), got ${typeName(data)}`);
+			}
 		}
 
 		const theList = [];
@@ -277,7 +291,7 @@ export default class List {
 	 */
 	get(index) {
 		if (typeof index !== 'number') {
-			throw new TypeError(`${this.displayName()}.get() expected number for the first parameter, got ${typeof index}`);
+			throw new TypeError(`${this.displayName()}.get() expected number for the first parameter, got ${typeName(index)}`);
 		}
 
 		if (index < 0) {
@@ -293,7 +307,7 @@ export default class List {
 	 */
 	set(index, value) {
 		if (typeof index !== 'number') {
-			throw new TypeError(`${this.displayName()}.set() expected number for the first parameter, got ${typeof index}`);
+			throw new TypeError(`${this.displayName()}.set() expected number for the first parameter, got ${typeName(index)}`);
 		}
 
 		if (index < 0) {
@@ -333,7 +347,7 @@ export default class List {
 	 */
 	mapEvery(n, fn, thisArg) {
 		if (typeof n !== 'number') {
-			throw new TypeError(`First parameter expected a number, got ${typeof n}`);
+			throw new TypeError(`First parameter expected a number, got ${typeName(n)}`);
 		}
 
 		if (n < 1) {
@@ -347,7 +361,7 @@ export default class List {
 		}
 
 		if (!isFunction(fn)) {
-			throw new TypeError(`Second parameter expected a function, got ${typeof fn}`);
+			throw new TypeError(`Second parameter expected a function, got ${typeName(fn)}`);
 		}
 
 		const results = [];

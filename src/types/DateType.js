@@ -1,5 +1,5 @@
 import BaseType from './BaseType';
-import {isArray, isFunction, isObject, isValidDate} from '../helpers';
+import {isFunction, isValidDate, typeName} from '../helpers';
 
 export default class DateType extends BaseType {
 	/**
@@ -111,17 +111,7 @@ export default class DateType extends BaseType {
 			return d;
 		}
 
-		if (isObject(value)) {
-			throw new TypeError(`Expecting "${name}" to be string or Date, got object`);
-		}
-
-		if (isArray(value)) {
-			throw new TypeError(`Expecting "${name}" to be string or Date, got array`);
-		}
-
-		if (['symbol', 'function', 'number', 'bigint', 'boolean'].indexOf(typeof value) >= 0) {
-			throw new TypeError(`Expecting "${name}" to be string or Date, got ${typeof value}`);
-		}
+		throw new TypeError(`Expecting "${name}" to be string or Date, got ${typeName(value)}`);
 	}
 
 	/**
@@ -138,20 +128,20 @@ export default class DateType extends BaseType {
 		// if our value is string, then we should try to lazy initialize this string and return valid Date
 		// if parsed string is not valid Date, we'll throw an exception
 
-		let returnValue = value;
+		// let returnValue = value;
+		//
+		// if (typeof value === 'string') {
+		// 	// good, let's parse it
+		// 	const d = new Date(Date.parse(value));
+		//
+		// 	if (!isValidDate(d)) {
+		// 		throw new TypeError(`Unable to parse value "${value}" for property "${name}"`);
+		// 	}
+		//
+		// 	returnValue = d;
+		// 	this._dateInstance = d;
+		// }
 
-		if (typeof value === 'string') {
-			// good, let's parse it
-			const d = new Date(Date.parse(value));
-
-			if (!isValidDate(d)) {
-				throw new TypeError(`Unable to parse value "${value}" for property "${name}"`);
-			}
-
-			returnValue = d;
-			this._dateInstance = d;
-		}
-
-		return super.getGetterValue(target, name, returnValue);
+		return super.getGetterValue(target, name, value);
 	}
 }

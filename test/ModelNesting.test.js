@@ -47,4 +47,41 @@ describe('Testing Model Nesting', () => {
 	it('Test JSON serialization', () => {
 		expect(JSON.stringify(car)).toEqual(JSON.stringify(data));
 	});
+
+	it('Test submodel value assignments', () => {
+		const m = Car.create({
+			id: 1,
+			name: 'The car'
+		});
+
+		expect(m.id).toEqual(1);
+		expect(m.parts).toBeInstanceOf(Parts);
+
+		expect(() => m.parts.push({})).toThrowError();
+		m.parts.push({
+			id: 1,
+			name: 'Doors'
+		});
+		expect(m.parts[0].id).toBe(1);
+		expect(m.parts.count()).toBe(1);
+		expect(m.parts.length).toBe(1);
+
+		// m.parts = undefined;
+		// expect(m.parts).toBeInstanceOf(Parts);
+		// expect(m.parts.count()).toBe(0);
+
+		m.parts = null;
+		expect(m.parts).toBeInstanceOf(Parts);
+		expect(m.parts.count()).toBe(0);
+	});
+
+	it('Test submodel null assignments on creation', () => {
+		expect(
+			Car.create({
+				id: 1,
+				name: 'The car',
+				parts: null
+			}).parts
+		).toBeInstanceOf(Parts);
+	});
 });

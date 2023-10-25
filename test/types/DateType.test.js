@@ -183,10 +183,26 @@ describe('Testing DateType', () => {
 		expect(() => (Scenario1.create().date = new Date('ABC'))).toThrowError('Property "date" got invalid instance of Date');
 	});
 
+	it(`Testing setter invalid value`, () => {
+		expect(() => (Scenario1.create().date = true)).toThrowError('Expecting "date" to be string or Date, got boolean');
+	});
+
 	it(`Testing method getter`, () => {
 		const instance = Scenario8.create();
 		expect(instance.date).toBeInstanceOf(Date);
 		expect(instance.getTheDate()).toBeInstanceOf(Date);
 		expect(instance.date).toBe(instance.getTheDate());
+	});
+
+	it(`Testing invalid default date type in definition`, () => {
+		class InvalidScenario1 extends Model {
+			definition() {
+				return {
+					date: new DateType('--invalid__date--').notNull()
+				};
+			}
+		}
+
+		expect(() => InvalidScenario1.create()).toThrow();
 	});
 });

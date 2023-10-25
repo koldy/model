@@ -1,5 +1,5 @@
 import BaseType from './BaseType';
-import {isArray, isFunction, isObject} from '../helpers';
+import {isArray, isFunction, typeName} from '../helpers';
 
 export default class ArrayType extends BaseType {
 	/**
@@ -49,12 +49,6 @@ export default class ArrayType extends BaseType {
 			return null;
 		}
 
-		if (isObject(value)) {
-			throw new TypeError(`Expecting "${name}" to be array, got object`);
-		}
-
-		if (['boolean', 'symbol', 'function', 'string', 'number', 'bigint'].indexOf(typeof value) >= 0) {
-			throw new TypeError(`Expecting "${name}" to be array, got ${typeof value}`);
-		}
+		throw new TypeError(`Expecting "${name}" to be array, got ${typeName(value)}`);
 	}
 }

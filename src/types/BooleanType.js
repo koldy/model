@@ -1,5 +1,5 @@
 import BaseType from './BaseType';
-import {isBool, isFunction, isObject, isArray} from '../helpers';
+import {isBool, isFunction, isObject, typeName} from '../helpers';
 
 export default class BooleanType extends BaseType {
 	/**
@@ -53,10 +53,6 @@ export default class BooleanType extends BaseType {
 			throw new TypeError(`Expecting "${name}" to be boolean, got object`);
 		}
 
-		if (isArray(value)) {
-			throw new TypeError(`Expecting "${name}" to be boolean, got array`);
-		}
-
 		if (typeof value === 'string') {
 			if (value.length === 0) {
 				if (this._acceptsNull) {
@@ -75,8 +71,6 @@ export default class BooleanType extends BaseType {
 			}
 		}
 
-		if (['symbol', 'function', 'string', 'number', 'bigint'].indexOf(typeof value) >= 0) {
-			throw new TypeError(`Expecting "${name}" to be boolean, got ${typeof value}`);
-		}
+		throw new TypeError(`Expecting "${name}" to be boolean, got ${typeName(value)}`);
 	}
 }

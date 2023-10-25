@@ -331,8 +331,16 @@ describe('Testing List', () => {
 		expect(() => Scenario4.create()).toThrowError('Invalid definition in Scenario4, expecting instance of BaseType or function of Model');
 	});
 
-	it(`Testing create with invalid type`, () => {
-		expect(() => Scenario1.create().setData(null)).toThrowError('Expected array for Scenario1.setData(), got object');
+	it(`Testing setData with null type`, () => {
+		const l = Scenario1.create();
+		l.setData(null);
+		expect(l.length).toBe(0);
+	});
+
+	it(`Testing setData with undefined type`, () => {
+		const l = Scenario1.create();
+		l.setData(undefined);
+		expect(l.length).toBe(0);
 	});
 
 	it(`Testing forEvery and mapEvery`, () => {
@@ -363,7 +371,7 @@ describe('Testing List', () => {
 		expect(() => list.mapEvery('a', () => {})).toThrowError('First parameter expected a number, got string');
 		expect(() => list.mapEvery(0, () => {})).toThrowError('First parameter expected a positive integer, got: 0');
 		expect(() => list.mapEvery(5.2, () => {})).toThrowError('First parameter expected integer, got float: 5.2');
-		expect(() => list.mapEvery(5, null)).toThrowError('Second parameter expected a function, got object');
+		expect(() => list.mapEvery(5, null)).toThrowError('Second parameter expected a function, got null');
 
 		list.reset();
 		expect(list.length).toBe(0);

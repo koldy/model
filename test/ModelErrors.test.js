@@ -111,6 +111,8 @@ describe('Testing Model definition errors', () => {
 	});
 
 	it(`Throw error if class model definition returns standard function for definition`, () => {
-		expect(() => Scenario9.create()).toThrowError('definition.create is not a function');
+		expect(() => Scenario9.create()).toThrowError(
+			'Scenario9.definition() method returned an object with property "count" that\'s not a valid definition type'
+		);
 	});
 });
