@@ -83,28 +83,38 @@ declare module 'koldy-model' {
 		notNull(notNull?: boolean): this;
 	}
 
+  export type AnyTypeDefaultValueFunction = () => any;
+
 	class AnyType extends BaseType {
-		constructor(defaultValue?: any);
+		constructor(defaultValue?: any | AnyTypeDefaultValueFunction);
 		withCustomValidator(fn: (obj: {value?: any; originalValue?: any; name: string; target: AnyType}) => void): this;
 	}
 
+  export type ArrayTypeDefaultValueFunction = () => Array<any>;
+
 	class ArrayType extends BaseType {
-		constructor(defaultValue?: Array<any>);
+		constructor(defaultValue?: Array<any> | ArrayTypeDefaultValueFunction);
 		withCustomValidator(fn: (obj: {value?: Array<any>; originalValue?: Array<any>; name: string; target: ArrayType}) => void): this;
 	}
 
+  export type BooleanTypeDefaultValueFunction = () => boolean;
+
 	class BooleanType extends BaseType {
-		constructor(defaultValue?: boolean);
+		constructor(defaultValue?: boolean | BooleanTypeDefaultValueFunction);
 		withCustomValidator(fn: (obj: {value?: boolean; originalValue?: boolean; name: string; target: BooleanType}) => void): this;
 	}
 
+  export type DateTypeDefaultValueFunction = () => Date;
+
 	class DateType extends BaseType {
-		constructor(defaultValue?: Date);
+		constructor(defaultValue?: Date | DateTypeDefaultValueFunction);
 		withCustomValidator(fn: (obj: {value?: Date; originalValue?: Date; name: string; target: DateType}) => void): this;
 	}
 
+  export type FloatTypeDefaultValueFunction = () => number;
+
 	class FloatType extends BaseType {
-		constructor(defaultValue?: number);
+		constructor(defaultValue?: number | FloatTypeDefaultValueFunction);
 		withCustomValidator(fn: (obj: {value?: number; originalValue?: number; name: string; target: FloatType}) => void): this;
 		min(x: number): this;
 		max(x: number): this;
@@ -112,23 +122,29 @@ declare module 'koldy-model' {
 		decimals(digits: number): this;
 	}
 
+  export type IntegerTypeDefaultValueFunction = () => number;
+
 	class IntegerType extends BaseType {
-		constructor(defaultValue?: number);
+		constructor(defaultValue?: number | IntegerTypeDefaultValueFunction);
 		withCustomValidator(fn: (obj: {value?: number; originalValue?: number; name: string; target: IntegerType}) => void): this;
 		min(x: number): this;
 		max(x: number): this;
 		between(x: number, y: number): this;
 	}
 
+  export type ObjectTypeDefaultValueFunction = () => {[p: string]: any};
+
 	class ObjectType extends BaseType {
-		constructor(defaultValue?: {[p: string]: any});
+		constructor(defaultValue?: {[p: string]: any} | ObjectTypeDefaultValueFunction);
 		withCustomValidator(
 			fn: (obj: {value?: {[p: string]: any}; originalValue?: {[p: string]: any}; name: string; target: ObjectType}) => void
 		): this;
 	}
 
+  export type StringTypeDefaultValueFunction = () => string | number;
+
 	class StringType extends BaseType {
-		constructor(defaultValue?: string | number);
+		constructor(defaultValue?: string | number | StringTypeDefaultValueFunction);
 		withCustomValidator(fn: (obj: {value?: string; originalValue?: string | number; name: string; target: StringType}) => void): this;
 	}
 }

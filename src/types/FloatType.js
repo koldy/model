@@ -97,7 +97,7 @@ export default class FloatType extends BaseType {
 			let decimals = tmp[1];
 
 			if (decimals.length > this._decimals) {
-				decimals = decimals.substr(0, this._decimals);
+				decimals = decimals.substring(0, this._decimals);
 			}
 
 			return parseFloat(`${tmp[0]}.${decimals}`);

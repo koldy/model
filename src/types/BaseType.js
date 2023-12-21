@@ -52,7 +52,7 @@ export default class BaseType {
 	 * @return {*}
 	 */
 	getDefaultValue() {
-		return this._defaultValue;
+		return typeof this._defaultValue === 'function' ? this._defaultValue() : this._defaultValue;
 	}
 
 	/**

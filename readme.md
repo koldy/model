@@ -148,6 +148,28 @@ console.log(car.isNew); // returns true
 console.log(car.features); // returns ['aircon', 'entertainment software']
 ```
 
+You may define a function for default value that will execute every time when lib requests for default value. In that case,
+the function must return a valid value for that type where it's being used.
+
+```ecmascript 6
+class Car extends Model {
+    definition() {
+        return {
+            brand: new StringType(() => 'Acura'),
+            miles: new IntegerType(() => 3),
+            isNew: new BooleanType(() => true),
+            features: new ArrayType(() => ['aircon', 'entertainment software'])
+        };
+    }
+}
+
+const car = Car.create();
+console.log(car.brand); // returns "Acura"
+console.log(car.miles); // returns 3
+console.log(car.isNew); // returns true
+console.log(car.features); // returns ['aircon', 'entertainment software']
+```
+
 ### Nullable / Not Nullable
 
 When some value is not set (in Javascript, set to `undefined`), Koldy Model will automatically set default value to `null`,
@@ -205,7 +227,7 @@ All methods listed in Types API are chainable.
 
 ### AnyType
 
-`new AnyType(defaultValue?: any)` accepts anything for the value.
+`new AnyType(defaultValue?: any | function)` accepts anything for the value.
 
 - `notNull()` - makes value not-nullable
 - `withCustomValidator(fn: function)` - validates value after all internal checks
@@ -235,7 +257,7 @@ user.age = true; // ok'
 
 ### ArrayType
 
-`new ArrayType(defaultValue?: array)` accepts array.
+`new ArrayType(defaultValue?: array|function)` accepts array.
 
 - `notNull()` - makes this property not-nullable - it always has to be an array
 - `withCustomValidator(fn: function)` - validates value after all internal checks
@@ -264,7 +286,7 @@ user.names = null; // throws TypeError
 
 ### BooleanType
 
-`new BooleanType(defaultValue?: boolean)` accepts boolean.
+`new BooleanType(defaultValue?: boolean|function)` accepts boolean.
 
 - `notNull()` - makes this property not-nullable
 - `withCustomValidator(fn: function)` - validates value after all internal checks
@@ -288,7 +310,7 @@ class User extends Model {
 
 ### DateType
 
-`new DateType(defaultValue?: Date|string)` accepts instance of `Date` or string. Anything you pass as a string will be accepted.
+`new DateType(defaultValue?: Date|string|function)` accepts instance of `Date` or string. Anything you pass as a string will be accepted.
 However, after getting a property of this type, your string will be parsed using `Date.parse()` which could fail. Koldy Model relies
 entirely on browser's Date implementation, which could be different from browser to browser. 
 
@@ -302,7 +324,7 @@ entirely on browser's Date implementation, which could be different from browser
 
 ### FloatType
 
-`new FloatType(defaultValue?: number)` accepts numbers with decimals. Any string passed to this property
+`new FloatType(defaultValue?: number|function)` accepts numbers with decimals. Any string passed to this property
 will be casted to number. Be aware that parsing can fail.
 
 - `notNull()` - makes this property not-nullable
@@ -336,7 +358,7 @@ class User extends Model {
 
 ### IntegerType
 
-`new IntegerType(defaultValue?: number)` accepts only integers. Any string passed to this property
+`new IntegerType(defaultValue?: number|function)` accepts only integers. Any string passed to this property
 will be casted to integer. If you pass a number with decimals, decimals will be cut off (integer won't be rounded).
 
 - `notNull()` - makes this property not-nullable
@@ -370,7 +392,7 @@ User.create({age: 100}); // throws TypeError because 99 is the max allowed value
 
 ### ObjectType
 
-`new ObjectType(defaultValue?: object)` accepts JS objects.
+`new ObjectType(defaultValue?: object|function)` accepts JS objects.
 
 - `notNull()` - makes this property not-nullable
 - `withCustomValidator(fn: function)` - validates value after all internal checks
@@ -403,7 +425,7 @@ user.address = null; // throws TypeError
 
 ### StringType
 
-`new StringType(defaultValue?: string)` accepts strings. If you pass a number, it'll be converted to string immediately.
+`new StringType(defaultValue?: string|function)` accepts strings. If you pass a number, it'll be converted to string immediately.
 
 If string property is set to be not null, then values like `undefined` or `null` will be always casted to empty string.
 In other case, if property is nullable, then values like `undefined` and `null` will be `null`. Empty string value will

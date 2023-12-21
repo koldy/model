@@ -57,6 +57,14 @@ class Scenario5 extends Model {
 	};
 }
 
+class Scenario6 extends Model {
+	definition() {
+		return {
+			name: new StringType(() => 'one').notNull()
+		};
+	};
+}
+
 describe(`Testing StringType`, () => {
 	it(`Testing empty instance of User`, () => {
 		const u = User.create({
@@ -196,5 +204,20 @@ describe(`Testing StringType`, () => {
 
 	it(`Testing invalid validator`, () => {
 		expect(() => Scenario5.create({name: 'Sky'})).toThrowError('Expected function for validator, got object');
+	})
+
+	it(`Testing function as default value`, () => {
+		expect(Scenario6.create({name: 'Sky'}).name).toBe('Sky');
+		expect(Scenario6.create({}).name).toBe('one');
+		expect(Scenario6.create().name).toBe('one');
+
+    const a = Scenario6.create();
+    expect(a.name).toBe('one');
+
+    a.name = 'Vlatko';
+    expect(a.name).toBe('Vlatko');
+
+    a.name = null;
+    expect(a.name).toBe('');
 	})
 });
