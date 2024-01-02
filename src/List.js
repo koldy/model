@@ -29,6 +29,7 @@ export default class List {
 	 * @param {{}} data
 	 */
 	constructor(data = {}) {
+		this._list = [];
 		if (isObject(data) && typeof data.__KOLDY_MODEL_USE_ONLY__ === 'boolean' && data.__KOLDY_MODEL_USE_ONLY__ === true) {
 			// it's fine
 		} else {

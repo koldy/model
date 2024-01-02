@@ -376,4 +376,21 @@ describe('Testing List', () => {
 		list.reset();
 		expect(list.length).toBe(0);
 	});
+
+  it(`Testing cloning`, () => {
+    const list1 = Scenario1.create();
+    let list2 = list1;
+
+    expect(list1).toBe(list2);
+    expect(list1.length).toBe(0);
+
+    list2 = list1.clone();
+    expect(list1).not.toBe(list2);
+    expect(list1.length).toBe(0);
+    expect(list2.length).toBe(0);
+
+    list2.push('Vlatko');
+    expect(list1.length).toBe(0);
+    expect(list2.length).toBe(1);
+  });
 });
