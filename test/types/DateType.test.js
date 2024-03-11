@@ -75,6 +75,20 @@ class Scenario8 extends Model {
 	}
 }
 
+class Scenario9 extends Model {
+	definition() {
+		return {
+			date: new DateType().withCustomGetter(function ({value}) {
+				if (!value) {
+					return 'N/A';
+				}
+
+				return value;
+			})
+		};
+	}
+}
+
 describe('Testing DateType', () => {
 	it(`Testing empty instance`, () => {
 		expect(Scenario1.create().date).toBeNull();
@@ -204,5 +218,12 @@ describe('Testing DateType', () => {
 		}
 
 		expect(() => InvalidScenario1.create()).toThrow();
+	});
+
+	it(`Testing with custom getter`, () => {
+    const x = Scenario9.create();
+    expect(x.date).toBe('N/A');
+    x.date = new Date();
+    expect(x.date).toBeInstanceOf(Date);
 	});
 });

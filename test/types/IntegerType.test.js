@@ -100,6 +100,16 @@ class Scenario9 extends Model {
 	}
 }
 
+class Scenario10 extends Model {
+	definition() {
+		return {
+			count: new IntegerType().withCustomGetter(function ({value}) {
+        return !!value ? value + 10 : 'N/A';
+      })
+		};
+	}
+}
+
 describe('Testing IntegerType', () => {
 	it(`Testing empty instance`, () => {
 		const u = Scenario1.create();
@@ -208,5 +218,18 @@ describe('Testing IntegerType', () => {
 		expect(() => {
 			s4.count = '';
 		}).toThrowError('Can not assign empty string to non-nullable IntegerType property "count"');
+	});
+
+	it(`Testing with custom getter`, () => {
+    const u = Scenario10.create();
+    expect(u.count).toBe('N/A');
+    u.count = 5;
+    expect(u.count).toBe(15);
+    u.count = 0;
+    expect(u.count).toBe('N/A');
+    u.count = null;
+    expect(u.count).toBe('N/A');
+    u.count = undefined;
+    expect(u.count).toBe('N/A');
 	});
 });

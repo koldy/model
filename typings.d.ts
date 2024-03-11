@@ -88,6 +88,7 @@ declare module 'koldy-model' {
 	class AnyType extends BaseType {
 		constructor(defaultValue?: any | AnyTypeDefaultValueFunction);
 		withCustomValidator(fn: (obj: {value?: any; originalValue?: any; name: string; target: AnyType}) => void): this;
+		withCustomGetter(fn: (obj: {value?: any; name: string; target: AnyType}) => any): this;
 	}
 
   export type ArrayTypeDefaultValueFunction = () => Array<any>;
@@ -95,6 +96,7 @@ declare module 'koldy-model' {
 	class ArrayType extends BaseType {
 		constructor(defaultValue?: Array<any> | ArrayTypeDefaultValueFunction);
 		withCustomValidator(fn: (obj: {value?: Array<any>; originalValue?: Array<any>; name: string; target: ArrayType}) => void): this;
+    withCustomGetter(fn: (obj: {value?: Array<any>; name: string; target: ArrayType}) => any): this;
 	}
 
   export type BooleanTypeDefaultValueFunction = () => boolean;
@@ -102,6 +104,7 @@ declare module 'koldy-model' {
 	class BooleanType extends BaseType {
 		constructor(defaultValue?: boolean | BooleanTypeDefaultValueFunction);
 		withCustomValidator(fn: (obj: {value?: boolean; originalValue?: boolean; name: string; target: BooleanType}) => void): this;
+    withCustomGetter(fn: (obj: {value?: boolean; name: string; target: BooleanType}) => any): this;
 	}
 
   export type DateTypeDefaultValueFunction = () => Date;
@@ -109,6 +112,7 @@ declare module 'koldy-model' {
 	class DateType extends BaseType {
 		constructor(defaultValue?: Date | DateTypeDefaultValueFunction);
 		withCustomValidator(fn: (obj: {value?: Date; originalValue?: Date; name: string; target: DateType}) => void): this;
+    withCustomGetter(fn: (obj: {value?: Date; name: string; target: DateType}) => any): this;
 	}
 
   export type FloatTypeDefaultValueFunction = () => number;
@@ -120,6 +124,7 @@ declare module 'koldy-model' {
 		max(x: number): this;
 		between(x: number, y: number): this;
 		decimals(digits: number): this;
+    withCustomGetter(fn: (obj: {value?: number; name: string; target: FloatType}) => any): this;
 	}
 
   export type IntegerTypeDefaultValueFunction = () => number;
@@ -130,6 +135,7 @@ declare module 'koldy-model' {
 		min(x: number): this;
 		max(x: number): this;
 		between(x: number, y: number): this;
+    withCustomGetter(fn: (obj: {value?: number; name: string; target: IntegerType}) => any): this;
 	}
 
   export type ObjectTypeDefaultValueFunction = () => {[p: string]: any};
@@ -139,6 +145,7 @@ declare module 'koldy-model' {
 		withCustomValidator(
 			fn: (obj: {value?: {[p: string]: any}; originalValue?: {[p: string]: any}; name: string; target: ObjectType}) => void
 		): this;
+    withCustomGetter(fn: (obj: {value?: {[p: string]: any}; name: string; target: ObjectType}) => any): this;
 	}
 
   export type StringTypeDefaultValueFunction = () => string | number;
@@ -146,5 +153,6 @@ declare module 'koldy-model' {
 	class StringType extends BaseType {
 		constructor(defaultValue?: string | number | StringTypeDefaultValueFunction);
 		withCustomValidator(fn: (obj: {value?: string; originalValue?: string | number; name: string; target: StringType}) => void): this;
+    withCustomGetter(fn: (obj: {value?: string; name: string; target: StringType}) => any): this;
 	}
 }

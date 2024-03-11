@@ -25,6 +25,13 @@ export default class BaseType {
 	_validator = null;
 
 	/**
+	 * The custom getter function which can be set by the user to perform custom data transformation
+	 * @type {null|function}
+	 * @private
+	 */
+	_customGetter = null;
+
+	/**
 	 * @param {*} defaultValue
 	 */
 	constructor(defaultValue = undefined) {
@@ -91,6 +98,10 @@ export default class BaseType {
 	 * @return {*}
 	 */
 	getGetterValue(target, name, value) {
+    if (typeof this.getCustomGetter() === 'function') {
+      return this.getCustomGetter().call(null, {value, name, target});
+    }
+
 		return value;
 	}
 
@@ -127,5 +138,25 @@ export default class BaseType {
 	 */
 	getCustomValidator() {
 		return this._validator;
+	}
+
+	/**
+	 * @param fn
+	 * @returns {this}
+	 */
+	withCustomGetter(fn) {
+		if (typeof fn !== 'function') {
+			throw new TypeError(`Expected function for getter, got ${typeof fn}`);
+		}
+
+		this._customGetter = fn;
+		return this;
+	}
+
+	/**
+	 * @return {Function|null}
+	 */
+	getCustomGetter() {
+		return this._customGetter;
 	}
 }

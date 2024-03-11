@@ -40,6 +40,16 @@ class Scenario4 extends Model {
 	}
 }
 
+class Scenario5 extends Model {
+	definition() {
+		return {
+			firstName: new AnyType().withCustomGetter(function ({value}) {
+        return !value ? 'Vlatko' : 'Koudela';
+      })
+		};
+	}
+}
+
 describe('Testing AnyType', () => {
 	it(`Testing empty instance`, () => {
 		const u = Scenario1.create();
@@ -130,5 +140,12 @@ describe('Testing AnyType', () => {
 	it(`Testing prop display name`, () => {
 		const x = Scenario1.create();
 		expect(x.getDefinitions().firstName.displayName()).toBe('AnyType');
+	});
+
+	it(`Testing custom getter`, () => {
+		const x = Scenario5.create();
+		expect(x.firstName).toBe('Vlatko');
+    x.firstName = 'Some non empty string';
+    expect(x.firstName).toBe('Koudela');
 	});
 });

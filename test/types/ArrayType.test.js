@@ -57,6 +57,16 @@ class Scenario6 extends Model {
 	}
 }
 
+class Scenario7 extends Model {
+	definition() {
+		return {
+			list: new ArrayType().withCustomGetter(function ({value}) {
+        return value.length === 0 ? null : value;
+      })
+    }
+	}
+}
+
 describe('Testing ArrayType', () => {
 	it(`Testing empty instance`, () => {
 		const u = Scenario1.create();
@@ -127,5 +137,12 @@ describe('Testing ArrayType', () => {
 		expect(() => Scenario6.create()).toThrowError('There should be at least 3 elements in array');
 		expect(() => Scenario6.create({list: [1, 2, 3, 4, 5, 6]})).toThrowError("There shouldn't be more than 5 elements in array");
 		expect(Scenario6.create({list: [1, 2, 3, 4, 5]}).list).toStrictEqual([1, 2, 3, 4, 5]);
+	});
+
+	it(`Testing with custom getter`, () => {
+    const u = Scenario7.create({list: []});
+    expect(u.list).toBeNull();
+    u.list = [1, 2, 3];
+    expect(u.list).toStrictEqual([1, 2, 3]);
 	});
 });

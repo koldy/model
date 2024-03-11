@@ -65,6 +65,16 @@ class Scenario6 extends Model {
 	};
 }
 
+class Scenario7 extends Model {
+	definition() {
+		return {
+			name: new StringType().withCustomGetter(function ({value}) {
+        return !!value ? 'yes' : 'no';
+      })
+		};
+	};
+}
+
 describe(`Testing StringType`, () => {
 	it(`Testing empty instance of User`, () => {
 		const u = User.create({
@@ -220,4 +230,15 @@ describe(`Testing StringType`, () => {
     a.name = null;
     expect(a.name).toBe('');
 	})
+
+  it(`Testing with custom getter`, () => {
+    const a = Scenario7.create({name: 'Vlatko'});
+    expect(a.name).toBe('yes');
+
+    a.name = '';
+    expect(a.name).toBe('no');
+
+    a.name = null;
+    expect(a.name).toBe('no');
+  });
 });

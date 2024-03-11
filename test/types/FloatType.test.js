@@ -133,6 +133,16 @@ class Scenario13 extends Model {
 	}
 }
 
+class Scenario14 extends Model {
+	definition() {
+		return {
+			count: new FloatType().withCustomGetter(function ({value}) {
+				return typeof value === 'number' ? value * 2 : null;
+			})
+		};
+	}
+}
+
 describe('Testing FloatType', () => {
 	it(`Testing empty instance`, () => {
 		const u = Scenario1.create();
@@ -250,17 +260,28 @@ describe('Testing FloatType', () => {
 		expect(() => Scenario13.create()).toThrowError('Given decimals value for FloatType should be positive integer; got -1');
 	});
 
-  it(`Testing assign string and empty string`, () => {
-    expect(Scenario2.create({count: ''}).count).toBeNull();
-    expect(() => Scenario3.create({count: ''})).toThrowError('Can not assign empty string to non-nullable FloatType property "count"');
+	it(`Testing assign string and empty string`, () => {
+		expect(Scenario2.create({count: ''}).count).toBeNull();
+		expect(() => Scenario3.create({count: ''})).toThrowError('Can not assign empty string to non-nullable FloatType property "count"');
 
-    const s2 = Scenario2.create();
-    s2.count = '';
-    expect(s2.count).toBeNull();
+		const s2 = Scenario2.create();
+		s2.count = '';
+		expect(s2.count).toBeNull();
 
-    const s4 = Scenario4.create();
-    expect(() => {
-      s4.count = '';
-    }).toThrowError('Can not assign empty string to non-nullable FloatType property "count"');
-  });
+		const s4 = Scenario4.create();
+		expect(() => {
+			s4.count = '';
+		}).toThrowError('Can not assign empty string to non-nullable FloatType property "count"');
+	});
+
+	it(`Testing with custom getter`, () => {
+		const s14 = Scenario14.create({count: 5});
+		expect(s14.count).toBe(10);
+
+		s14.count = 10;
+		expect(s14.count).toBe(20);
+
+		s14.count = null;
+		expect(s14.count).toBeNull();
+	});
 });

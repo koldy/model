@@ -53,6 +53,16 @@ class Scenario6 extends Model {
 	}
 }
 
+class Scenario7 extends Model {
+	definition() {
+		return {
+			ok: new BooleanType().withCustomGetter(function ({value}) {
+				return true;
+			})
+		};
+	}
+}
+
 describe('Testing BooleanType', () => {
 	it(`Testing empty instance`, () => {
 		const u = Scenario1.create();
@@ -163,5 +173,14 @@ describe('Testing BooleanType', () => {
 
 	it(`Testing invalid default value type`, () => {
 		expect(() => Scenario6.create()).toThrowError('Property "ok" should have boolean for its default value, got string');
+	});
+
+	it(`Testing with custom getter`, () => {
+		const u = Scenario7.create();
+		expect(u.ok).toBeTruthy();
+		u.ok = false;
+		expect(u.ok).toBeTruthy();
+		u.ok = true;
+		expect(u.ok).toBeTruthy();
 	});
 });

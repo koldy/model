@@ -57,6 +57,16 @@ class Scenario6 extends Model {
 	}
 }
 
+class Scenario7 extends Model {
+	definition() {
+		return {
+			list: new ObjectType().withCustomGetter(function ({value}) {
+				return !value ? {one: 1} : value;
+			})
+		};
+	}
+}
+
 describe('Testing ObjectType', () => {
 	it(`Testing empty instance`, () => {
 		const u = Scenario1.create();
@@ -124,7 +134,22 @@ describe('Testing ObjectType', () => {
 
 	it(`Testing custom validator`, () => {
 		expect(() => Scenario6.create()).toThrowError('Default value error: One should be less than 10');
-		expect(() => Scenario6.create({list: {one: 1, two: 2}})).toThrowError("One should be less than 10");
+		expect(() => Scenario6.create({list: {one: 1, two: 2}})).toThrowError('One should be less than 10');
 		expect(Scenario6.create({list: {one: 15, two: 2}}).list).toStrictEqual({one: 15, two: 2});
+	});
+
+	it(`Testing custom getter`, () => {
+		const obj = Scenario7.create();
+    expect(obj.list).toStrictEqual({one: 1});
+    obj.list = {name: 'Vlatko'};
+    expect(obj.list).toStrictEqual({name: 'Vlatko'});
+    obj.list = null;
+    expect(obj.list).toStrictEqual({one: 1});
+
+    const obj2 = Scenario7.create({list: null});
+    expect(obj2.list).toStrictEqual({one: 1});
+
+    const obj3 = Scenario7.create({list: {name: 'Vlatko'}});
+    expect(obj3.list).toStrictEqual({name: 'Vlatko'});
 	});
 });

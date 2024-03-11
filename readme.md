@@ -219,6 +219,36 @@ In the example above, we pass function to `withCustomValidator` that accepts obj
 
 In the example above, since `notNull()` is used, you'll never get `null` for the value in custom validator.
 
+### Custom getter
+
+All types can transform their output when requested through the getter. If set, getter function will be called on every
+request for the value of the property. Getter method can return anything and it doesn't need to be the same type as the
+property is defined - library won't check that, but we recommend that you keep the same or at least compatible type returned
+from the getter.
+
+```ecmascript 6
+class User extends Model {
+    definition() {
+        return {
+            age: new IntegerType().notNull().withCustomGetter(function ({value}) {
+              if (value >= 18 && value <= 21) {
+                return -1;
+              }
+            })
+        };
+    }
+}
+
+const user = User.create({age: 20});
+console.log(user.age); // returns -1
+```
+
+In the example above, we pass function to `withCustomGetter` that accepts object as argument. That object contains:
+
+- `value` - that value that would be originally returned if there was no custom getter
+- `name` - the name of property
+- `target` - the instance of type
+
 ---
 
 ## Data Types
@@ -236,6 +266,12 @@ All methods listed in Types API are chainable.
         - `originalValue: any|null` - original value passed to setter - it could be different than value if not-null or defaultValue were applied on `value`
         - `name: string` - name of the property
         - `target: object` - the instance of object on which the setter function was called
+- `withCustomGetter(fn: function)` - optionally transforms value when getter is called
+    - function gets object for first parameter with keys:
+        - `value: any|null` - a value that could be inspected
+        - `name: string` - name of the property
+        - `target: object` - the instance of object on which the setter function was called
+    - function can and should return something (anything)
 
 Example:
 
@@ -266,6 +302,12 @@ user.age = true; // ok'
         - `originalValue: array|null` - original value passed to setter - it could be different than value if not-null or defaultValue were applied on `value`
         - `name: string` - name of the property
         - `target: object` - the instance of object on which the setter function was called
+- `withCustomGetter(fn: function)` - optionally transforms value when getter is called
+    - function gets object for first parameter with keys:
+        - `value: array|null` - a value that could be inspected
+        - `name: string` - name of the property
+        - `target: object` - the instance of object on which the setter function was called
+    - function can and should return something (anything)
 
 Example:
 
@@ -295,6 +337,12 @@ user.names = null; // throws TypeError
         - `originalValue: boolean|null` - original value passed to setter - it could be different than value if not-null or defaultValue were applied on `value`
         - `name: string` - name of the property
         - `target: object` - the instance of object on which the setter function was called
+- `withCustomGetter(fn: function)` - optionally transforms value when getter is called
+    - function gets object for first parameter with keys:
+        - `value: boolean|null` - a value that could be inspected
+        - `name: string` - name of the property
+        - `target: object` - the instance of object on which the setter function was called
+    - function can and should return something (anything)
 
 Example:
 
@@ -338,6 +386,12 @@ will be casted to number. Be aware that parsing can fail.
 - `min(x: number)` - the minimum number accepted for this property
 - `max(x: number)` - the maximum number accepted for this property
 - `between(x: number, y: number)` - shorthand for combination of `min()` and `max()`
+- `withCustomGetter(fn: function)` - optionally transforms value when getter is called
+    - function gets object for first parameter with keys:
+        - `value: number|null` - a value that could be inspected
+        - `name: string` - name of the property
+        - `target: object` - the instance of object on which the setter function was called
+    - function can and should return something (anything)
 
 Example:
 
@@ -371,6 +425,12 @@ will be casted to integer. If you pass a number with decimals, decimals will be 
 - `min(x: number)` - the minimum number accepted for this property
 - `max(x: number)` - the maximum number accepted for this property
 - `between(x: number, y: number)` - shorthand for combination of `min()` and `max()`
+- `withCustomGetter(fn: function)` - optionally transforms value when getter is called
+    - function gets object for first parameter with keys:
+        - `value: number|null` - a value that could be inspected
+        - `name: string` - name of the property
+        - `target: object` - the instance of object on which the setter function was called
+    - function can and should return something (anything)
 
 Example:
 
@@ -401,6 +461,12 @@ User.create({age: 100}); // throws TypeError because 99 is the max allowed value
         - `originalValue: object|null` - original value passed to setter - it could be different than value if not-null or defaultValue were applied on `value`
         - `name: string` - name of the property
         - `target: object` - the instance of object on which the setter function was called
+- `withCustomGetter(fn: function)` - optionally transforms value when getter is called
+    - function gets object for first parameter with keys:
+        - `value: object|null` - a value that could be inspected
+        - `name: string` - name of the property
+        - `target: object` - the instance of object on which the setter function was called
+    - function can and should return something (anything)
 
 Example:
 
@@ -438,6 +504,12 @@ be converted to `null` as well.
         - `originalValue: string|null` - original value passed to setter - it could be different than value if not-null or defaultValue were applied on `value`
         - `name: string` - name of the property
         - `target: object` - the instance of object on which the setter function was called
+- `withCustomGetter(fn: function)` - optionally transforms value when getter is called
+    - function gets object for first parameter with keys:
+        - `value: string|null` - a value that could be inspected
+        - `name: string` - name of the property
+        - `target: object` - the instance of object on which the setter function was called
+    - function can and should return something (anything)
 
 Example:
 
