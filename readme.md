@@ -528,6 +528,47 @@ user.firstName = 'Vlatko'; // ok
 user.firstName = 55; // ok, but converted to string "55"
 ```
 
+### ConstantType
+
+`new ConstantType(defaultValue: string|number|object|boolean|null|function)` - note that default value is mandatory on this type and it can be almost anything. Setting a value will check the value with strict type and that rule also applies for comparing objects.
+
+- `withCustomValidator(fn: function)` - validates value after all internal checks
+    - function gets object for first parameter with keys:
+        - `value: string|number|object|boolean|null` - a value that should be validated
+        - `originalValue: string|number|object|boolean|null` - original value passed to setter - it could be different than value if not-null or defaultValue were applied on `value`
+        - `name: string` - name of the property
+        - `target: object` - the instance of object on which the setter function was called
+- `withCustomGetter(fn: function)` - optionally transforms value when getter is called - return value will not be checked against the constant
+
+Example:
+
+```ecmascript 6
+class User extends Model {
+    definition() {
+        return {
+            role: new ConstantType('admin')
+        };
+    }
+}
+
+const user = User.create();
+
+user.role = 'admin'; // ok
+user.role = 'user'; // throws TypeError
+```
+
+If using Typescript, you can define a type of your constant:
+
+```typescript
+class User extends Model {
+    definition() {
+        return {
+            role: new ConstantType<'user'>('user')
+        };
+    }
+}
+```
+
 ---
 
 ## Lists

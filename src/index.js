@@ -10,6 +10,7 @@ import FloatType from './types/FloatType';
 import IntegerType from './types/IntegerType';
 import ObjectType from './types/ObjectType';
 import StringType from './types/StringType';
+import ConstantType from './types/ConstantType';
 
 export {
 	Model,
@@ -23,5 +24,6 @@ export {
 	FloatType,
 	IntegerType,
 	ObjectType,
-	StringType
+	StringType,
+	ConstantType
 };

@@ -9,6 +9,7 @@ declare module 'koldy-model' {
       | IntegerType
       | ObjectType
       | StringType
+      | ConstantType
       | typeof Model
       | typeof List<Model>
       | { [p: string]: any }
@@ -34,7 +35,7 @@ declare module 'koldy-model' {
 	}
 
 	export class List<M> {
-		static create<L extends List<X>, X extends Model>(elements?: Partial<X>[], definition?: Model | AnyType | ArrayType | BooleanType | DateType | FloatType | IntegerType | ObjectType | StringType): L;
+		static create<L extends List<X>, X extends Model>(elements?: Partial<X>[], definition?: Model | AnyType | ArrayType | BooleanType | DateType | FloatType | IntegerType | ObjectType | StringType | ConstantType): L;
 		static of(definition?: DefinitionType);
 		length: number;
 		displayName(): string;
@@ -155,4 +156,12 @@ declare module 'koldy-model' {
 		withCustomValidator(fn: (obj: {value?: string; originalValue?: string | number; name: string; target: StringType}) => void): this;
     withCustomGetter(fn: (obj: {value?: string; name: string; target: StringType}) => any): this;
 	}
+
+  export type ConstantTypeDefaultValueFunction<T = string | number | object | boolean | null> = () => T;
+
+  class ConstantType<T = string | number | object | boolean | null> extends BaseType {
+    constructor(defaultValue?: T | ConstantTypeDefaultValueFunction<T>);
+    withCustomValidator(fn: (obj: {value?: T; originalValue?: T; name: string; target: ConstantType<T>}) => void): this;
+    withCustomGetter(fn: (obj: {value: T | null; name: string; target: ConstantType<T>}) => any): this;
+  }
 }

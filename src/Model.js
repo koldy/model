@@ -1,5 +1,6 @@
 import {isFunction, isObject} from './helpers';
 import BaseType from './types/BaseType';
+import ConstantType from './types/ConstantType';
 import List from './List';
 
 export default class Model {
@@ -113,8 +114,13 @@ export default class Model {
 
 				// handle default value
 
-				self[field] = definition.getSetterValue(self, field, givenData[field]);
-				// throw new TypeError(`Unable to use definition for field "${field}", expected instance of BaseType or Function/class that extends Model/List, got ${typeof definition}`);
+				if (definition instanceof ConstantType) {
+					self[field] =
+						givenData[field] === undefined ? definition.getDefaultValue() : definition.getSetterValue(self, field, givenData[field]);
+				} else {
+					self[field] = definition.getSetterValue(self, field, givenData[field]);
+					// throw new TypeError(`Unable to use definition for field "${field}", expected instance of BaseType or Function/class that extends Model/List, got ${typeof definition}`);
+				}
 			}
 		});
 
