@@ -154,6 +154,9 @@ describe('Testing FloatType', () => {
 		expect(Scenario1.create({count: 0}).count).toBe(0);
 		expect(Scenario1.create({count: -1}).count).toBe(-1);
 		expect(Scenario1.create({count: -153252346.33}).count).toBe(-153252346.33);
+		expect(Scenario1.create({count: '-1'}).count).toBe(-1);
+		expect(Scenario1.create({count: '-2.515'}).count).toBe(-2.515);
+		expect(Scenario1.create({count: '+5.5'}).count).toBe(5.5);
 	});
 
 	it(`Testing casting float to integer`, () => {
