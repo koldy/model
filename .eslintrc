@@ -19,5 +19,6 @@
 		"func-names": 0,
 		"no-console": "warn",
 		"import/prefer-default-export": 1
-	}
+	},
+	"ignorePatterns": ["node_modules/", "esm/", "lib/", "*.ts"]
 }

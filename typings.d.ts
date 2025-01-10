@@ -1,4 +1,4 @@
-declare module 'koldy-model' {
+declare module "koldy-model" {
   type DefinitionType = {
     [p: string]:
       AnyType
@@ -36,7 +36,7 @@ declare module 'koldy-model' {
 
 	export class List<M> {
 		static create<L extends List<X>, X extends Model>(elements?: Partial<X>[], definition?: Model | AnyType | ArrayType | BooleanType | DateType | FloatType | IntegerType | ObjectType | StringType | ConstantType): L;
-		static of(definition?: DefinitionType);
+		static of<M>(definition?: DefinitionType): List<M>;
 		length: number;
 		displayName(): string;
 		definition(): typeof Model;
@@ -77,6 +77,8 @@ declare module 'koldy-model' {
 		toString(): string;
 		unshift(...items: M[]): number;
 		values(): IterableIterator<M>;
+		// gives ability to parse/modify received data before it's being added to the list
+		protected _parse(data: any): M;
 	}
 
 	class BaseType {
