@@ -231,10 +231,16 @@ export default class Model {
 			if (this._keys.indexOf(key) >= 0) {
 				// ^^ accept only keys from definition, ignore all the others
 
-				if (isObject(this[key]) && (this[key] instanceof Model || this[key] instanceof List)) {
-					this[key].setData(givenData[key]);
+				const oldValue = this.get(key);
+
+				if (isObject(oldValue) && (oldValue instanceof Model || oldValue instanceof List)) {
+					if (oldValue instanceof List) {
+						this[key].setData(givenData[key]);
+					} else {
+						this.set(key, givenData[key]);
+					}
 				} else {
-					this[key] = givenData[key];
+					this.set(key, givenData[key]);
 				}
 			}
 		});
@@ -256,7 +262,21 @@ export default class Model {
 			throw new TypeError(`${this.displayName()}.get() expects first parameter to be string, got ${typeof name}`);
 		}
 
-		return this[name];
+		const definition = this._definitions[name];
+
+		if (typeof this[name] === 'function') {
+			return this[name].bind(this);
+		}
+
+		if (isObject(this[name]) && (this[name] instanceof Model || this[name] instanceof List)) {
+			return this[name];
+		}
+
+		if (!(definition instanceof BaseType)) {
+			throw new TypeError(`Can not get ${name} because it's not defined in ${this.displayName()} model`);
+		}
+
+		return definition.getGetterValue(this, name, this[name]);
 	}
 
 	/**
@@ -268,7 +288,23 @@ export default class Model {
 			throw new TypeError(`${this.displayName()}.set() expects first parameter to be string, got ${typeof name}`);
 		}
 
-		this[name] = value;
+		if (this._keys.indexOf(name) === -1) {
+			throw new TypeError(`Can not assign ${typeof value} to ${name} because it's not defined in ${this.displayName()} model`);
+		}
+
+		const definition = this._definitions[name];
+
+		if (isObject(this[name]) && (this[name] instanceof Model || this[name] instanceof List)) {
+			this[name].setData(value);
+			return true;
+		}
+
+		if (!(definition instanceof BaseType)) {
+			throw new Error(`Definition for ${name} is not instance of BaseType`);
+		}
+
+		const newValue = definition.getSetterValue(this, name, value);
+		this[name] = newValue === undefined ? definition.getDefaultValue() : newValue;
 	}
 
 	/**

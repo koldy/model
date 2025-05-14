@@ -226,4 +226,52 @@ describe('Testing DateType', () => {
     x.date = new Date();
     expect(x.date).toBeInstanceOf(Date);
 	});
+
+	it(`Testing getters and setters (1)`, () => {
+    const x = Scenario1.create();
+
+		x.date = '2020-05-03 22:20:02';
+		expect(x.date).toBeInstanceOf(Date);
+		expect(x.date.toISOString()).toBe(new Date(Date.parse('2020-05-03 22:20:02')).toISOString());
+		expect(x.get('date')).toBeInstanceOf(Date);
+		expect(x.get('date').toISOString()).toBe(new Date(Date.parse('2020-05-03 22:20:02')).toISOString());
+
+		x.set('date', '2020-05-05 22:20:02');
+		expect(x.date).toBeInstanceOf(Date);
+		expect(x.date.toISOString()).toBe(new Date(Date.parse('2020-05-05 22:20:02')).toISOString());
+		expect(x.get('date')).toBeInstanceOf(Date);
+		expect(x.get('date').toISOString()).toBe(new Date(Date.parse('2020-05-05 22:20:02')).toISOString());
+
+		x.setData({
+			date: '2020-05-07 22:20:02'
+		});
+
+		expect(x.date).toBeInstanceOf(Date);
+		expect(x.date.toISOString()).toBe(new Date(Date.parse('2020-05-07 22:20:02')).toISOString());
+		expect(x.get('date')).toBeInstanceOf(Date);
+		expect(x.get('date').toISOString()).toBe(new Date(Date.parse('2020-05-07 22:20:02')).toISOString());
+	});
+
+	it(`Testing getters and setters (2)`, () => {
+    const x = Scenario1.create();
+
+		x.setData({
+			date: '2020-05-03 22:20:02'
+		});
+
+		expect(x.date).toBeInstanceOf(Date);
+		expect(x.date.toISOString()).toBe(new Date(Date.parse('2020-05-03 22:20:02')).toISOString());
+		expect(x.get('date')).toBeInstanceOf(Date);
+		expect(x.get('date').toISOString()).toBe(new Date(Date.parse('2020-05-03 22:20:02')).toISOString());
+	});
+
+	it(`Testing getters and setters (3)`, () => {
+    const x = Scenario1.create();
+
+		x.set('date', '2020-05-03 22:20:02');
+		expect(x.date).toBeInstanceOf(Date);
+		expect(x.date.toISOString()).toBe(new Date(Date.parse('2020-05-03 22:20:02')).toISOString());
+		expect(x.get('date')).toBeInstanceOf(Date);
+		expect(x.get('date').toISOString()).toBe(new Date(Date.parse('2020-05-03 22:20:02')).toISOString());
+	});
 });
