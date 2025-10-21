@@ -75,12 +75,12 @@ describe(`Testing ConstantType`, () => {
     const user2 = User.create({type: 'user'});
     expect(user2.type).toBe('user');
 
-    expect(() => User.create({type: 'admin'})).toThrowError();
+    expect(() => User.create({type: 'admin'})).toThrow();
 	});
 
 	it(`Should throw error when trying to set constant value`, () => {
 		const user = User.create();
-		expect(() => (user.type = 'something_else')).toThrowError();
+		expect(() => (user.type = 'something_else')).toThrow();
 
 		user.type = 'user';
 		expect(user.type).toBe('user');
@@ -93,14 +93,14 @@ describe(`Testing ConstantType`, () => {
 
 	it(`Should throw error when trying to set constant value`, () => {
 		const admin = Admin.create();
-		expect(() => (admin.type = 'user')).toThrowError();
+		expect(() => (admin.type = 'user')).toThrow();
 	});
 
 	it(`Should set constant value`, () => {
 		const unknownUser = UnknownUser.create();
 		expect(unknownUser.type).toBeNull();
 
-		expect(() => (unknownUser.type = 'user')).toThrowError();
+		expect(() => (unknownUser.type = 'user')).toThrow();
 
 		unknownUser.type = null;
 		expect(unknownUser.type).toBeNull();
@@ -109,21 +109,21 @@ describe(`Testing ConstantType`, () => {
 	it(`Should throw error when trying to set mixed types as value`, () => {
 		const el = ObjectUser.create();
 
-		expect(() => (el.type = 'user')).toThrowError();
-		expect(() => (el.type = null)).toThrowError();
-		expect(() => (el.type = undefined)).toThrowError();
-		expect(() => (el.type = {b: 2})).toThrowError();
-		expect(() => (el.type = {a: 1})).toThrowError();
+		expect(() => (el.type = 'user')).toThrow();
+		expect(() => (el.type = null)).toThrow();
+		expect(() => (el.type = undefined)).toThrow();
+		expect(() => (el.type = {b: 2})).toThrow();
+		expect(() => (el.type = {a: 1})).toThrow();
 	});
 
   it(`Should set constant value`, () => {
     const sameUser = SameUser.create();
     expect(sameUser.type).toBe(X);
 
-    expect(() => (sameUser.type = 'user')).toThrowError();
-    expect(() => (sameUser.type = null)).toThrowError();
-    expect(() => (sameUser.type = undefined)).toThrowError();
-    expect(() => (sameUser.type = {b: 2})).toThrowError();
+    expect(() => (sameUser.type = 'user')).toThrow();
+    expect(() => (sameUser.type = null)).toThrow();
+    expect(() => (sameUser.type = undefined)).toThrow();
+    expect(() => (sameUser.type = {b: 2})).toThrow();
 
     sameUser.type = X;
     expect(sameUser.type).toBe(X);
@@ -133,27 +133,27 @@ describe(`Testing ConstantType`, () => {
     const dynamicUser = DynamicUser.create();
     expect(dynamicUser.type).toBe(12345);
 
-    expect(() => (dynamicUser.type = 'user')).toThrowError();
-    expect(() => (dynamicUser.type = null)).toThrowError();
-    expect(() => (dynamicUser.type = undefined)).toThrowError();
-    expect(() => (dynamicUser.type = {b: 2})).toThrowError();
+    expect(() => (dynamicUser.type = 'user')).toThrow();
+    expect(() => (dynamicUser.type = null)).toThrow();
+    expect(() => (dynamicUser.type = undefined)).toThrow();
+    expect(() => (dynamicUser.type = {b: 2})).toThrow();
 
     dynamicUser.type = 12345;
     expect(dynamicUser.type).toBe(12345);
 
-    expect(() => dynamicUser.type = () => 12345).toThrowError();
-    expect(() => (dynamicUser.type = 12346)).toThrowError();
+    expect(() => dynamicUser.type = () => 12345).toThrow();
+    expect(() => (dynamicUser.type = 12346)).toThrow();
   });
 
   it(`Should set constant value with boolean`, () => {
     const booleanUser = BooleanUser.create();
     expect(booleanUser.type).toBe(true);
 
-    expect(() => (booleanUser.type = 'user')).toThrowError();
-    expect(() => (booleanUser.type = null)).toThrowError();
-    expect(() => (booleanUser.type = undefined)).toThrowError();
-    expect(() => (booleanUser.type = {b: 2})).toThrowError();
-    expect(() => (booleanUser.type = false)).toThrowError();
+    expect(() => (booleanUser.type = 'user')).toThrow();
+    expect(() => (booleanUser.type = null)).toThrow();
+    expect(() => (booleanUser.type = undefined)).toThrow();
+    expect(() => (booleanUser.type = {b: 2})).toThrow();
+    expect(() => (booleanUser.type = false)).toThrow();
 
     booleanUser.type = true;
     expect(booleanUser.type).toBe(true);

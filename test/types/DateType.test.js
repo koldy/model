@@ -100,30 +100,30 @@ describe('Testing DateType', () => {
 	});
 
 	it(`Testing invalid value`, () => {
-		expect(() => Scenario1.create({date: 'XXX'}).date).toThrowError('Can not parse date string [XXX] into Date object for property "date"');
-		expect(() => Scenario1.create({date: true}).date).toThrowError('Expecting "date" to be string or Date, got boolean');
-		expect(() => Scenario1.create({date: {}}).date).toThrowError('Expecting "date" to be string or Date, got object');
-		expect(() => Scenario1.create({date: []}).date).toThrowError('Expecting "date" to be string or Date, got array');
-		expect(() => Scenario1.create({date: 5}).date).toThrowError('Expecting "date" to be string or Date, got number');
+		expect(() => Scenario1.create({date: 'XXX'}).date).toThrow('Can not parse date string [XXX] into Date object for property "date"');
+		expect(() => Scenario1.create({date: true}).date).toThrow('Expecting "date" to be string or Date, got boolean');
+		expect(() => Scenario1.create({date: {}}).date).toThrow('Expecting "date" to be string or Date, got object');
+		expect(() => Scenario1.create({date: []}).date).toThrow('Expecting "date" to be string or Date, got array');
+		expect(() => Scenario1.create({date: 5}).date).toThrow('Expecting "date" to be string or Date, got number');
 	});
 
 	it(`Testing not null`, () => {
-		expect(() => Scenario2.create().date).toThrowError(
+		expect(() => Scenario2.create().date).toThrow(
 			'Property "date" should be non-null value; either set the "date" in constructor or set its default value to be a string or Date'
 		);
-		expect(() => Scenario2.create({date: undefined}).date).toThrowError(
+		expect(() => Scenario2.create({date: undefined}).date).toThrow(
 			'Property "date" should be non-null value; either set the "date" in constructor or set its default value to be a string or Date'
 		);
-		expect(() => Scenario2.create({date: null}).date).toThrowError('Property "date" doesn\'t accept null for its value');
+		expect(() => Scenario2.create({date: null}).date).toThrow('Property "date" doesn\'t accept null for its value');
 
 		expect(() => {
 			const x = Scenario2.create({date: new Date()});
 			x.date = null;
-		}).toThrowError('Property "date" doesn\'t accept null for its value');
+		}).toThrow('Property "date" doesn\'t accept null for its value');
 	});
 
 	it(`Testing invalid instance of Date of default value`, () => {
-		expect(() => Scenario3.create()).toThrowError('Can\'t assign default value to property "date" because it has invalid instance of Date');
+		expect(() => Scenario3.create()).toThrow('Can\'t assign default value to property "date" because it has invalid instance of Date');
 	});
 
 	it(`Testing valid instance of Date of default value`, () => {
@@ -142,10 +142,10 @@ describe('Testing DateType', () => {
 	it(`Testing valid instance of Date of default value with not null`, () => {
 		const date = new Date(Date.parse('2020-04-22 22:22:22.000'));
 		expect(Scenario5.create().date.toISOString()).toBe(date.toISOString());
-		expect(() => Scenario5.create({date: null}).date).toThrowError('Property "date" doesn\'t accept null for its value');
+		expect(() => Scenario5.create({date: null}).date).toThrow('Property "date" doesn\'t accept null for its value');
 
 		const x = Scenario5.create();
-		expect(() => (x.date = null)).toThrowError('Property "date" doesn\'t accept null for its value');
+		expect(() => (x.date = null)).toThrow('Property "date" doesn\'t accept null for its value');
 
 		x.date = undefined;
 		expect(x.date.toISOString()).toBe(date.toISOString());
@@ -169,14 +169,14 @@ describe('Testing DateType', () => {
 	});
 
 	it(`Testing custom validator`, () => {
-		expect(() => Scenario6.create({date: null})).toThrowError("Date shouldn't be null");
+		expect(() => Scenario6.create({date: null})).toThrow("Date shouldn't be null");
 
 		const x = Scenario6.create({date: new Date()});
-		expect(() => (x.date = null)).toThrowError("Date shouldn't be null");
+		expect(() => (x.date = null)).toThrow("Date shouldn't be null");
 	});
 
 	it(`Testing invalid default value`, () => {
-		expect(() => Scenario7.create()).toThrowError('Invalid default value for property "date", expected string or Date, got object');
+		expect(() => Scenario7.create()).toThrow('Invalid default value for property "date", expected string or Date, got object');
 	});
 
 	it(`Testing string default value`, () => {
@@ -186,19 +186,19 @@ describe('Testing DateType', () => {
 	it(`Testing getter parsing error`, () => {
 		const x = Scenario1.create();
 
-		expect(() => (x.date = '2020-XX-YY AA:B0:CC')).toThrowError(
+		expect(() => (x.date = '2020-XX-YY AA:B0:CC')).toThrow(
 			'Can not parse date string [2020-XX-YY AA:B0:CC] into Date object for property "date"'
 		);
 
-		expect(() => (x.date = 'ABC-BLA')).toThrowError('Can not parse date string [ABC-BLA] into Date object for property "date"');
+		expect(() => (x.date = 'ABC-BLA')).toThrow('Can not parse date string [ABC-BLA] into Date object for property "date"');
 	});
 
 	it(`Testing getter invalid instance`, () => {
-		expect(() => (Scenario1.create().date = new Date('ABC'))).toThrowError('Property "date" got invalid instance of Date');
+		expect(() => (Scenario1.create().date = new Date('ABC'))).toThrow('Property "date" got invalid instance of Date');
 	});
 
 	it(`Testing setter invalid value`, () => {
-		expect(() => (Scenario1.create().date = true)).toThrowError('Expecting "date" to be string or Date, got boolean');
+		expect(() => (Scenario1.create().date = true)).toThrow('Expecting "date" to be string or Date, got boolean');
 	});
 
 	it(`Testing method getter`, () => {

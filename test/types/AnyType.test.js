@@ -133,8 +133,8 @@ describe('Testing AnyType', () => {
 	});
 
 	it(`Testing custom validator`, () => {
-		expect(() => Scenario4.create({firstName: null})).toThrowError('Value should not be null or 2');
-		expect(() => Scenario4.create({firstName: 2})).toThrowError('Value should not be null or 2');
+		expect(() => Scenario4.create({firstName: null})).toThrow('Value should not be null or 2');
+		expect(() => Scenario4.create({firstName: 2})).toThrow('Value should not be null or 2');
 	});
 
 	it(`Testing prop display name`, () => {

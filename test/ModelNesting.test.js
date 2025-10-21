@@ -57,7 +57,7 @@ describe('Testing Model Nesting', () => {
 		expect(m.id).toEqual(1);
 		expect(m.parts).toBeInstanceOf(Parts);
 
-		expect(() => m.parts.push({})).toThrowError();
+		expect(() => m.parts.push({})).toThrow();
 		m.parts.push({
 			id: 1,
 			name: 'Doors'

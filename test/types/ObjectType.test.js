@@ -92,12 +92,12 @@ describe('Testing ObjectType', () => {
 	it(`Testing wrong type assignment errors`, () => {
 		const u = Scenario1.create();
 
-		expect(() => (u.list = 5)).toThrowError('Expecting "list" to be object, got number');
-		expect(() => (u.list = 0.12)).toThrowError('Expecting "list" to be object, got number');
-		expect(() => (u.list = 12n)).toThrowError('Expecting "list" to be object, got bigint');
-		expect(() => (u.list = '5')).toThrowError('Expecting "list" to be object, got string');
-		expect(() => (u.list = [])).toThrowError('Expecting "list" to be object, got array');
-		expect(() => (u.list = function () {})).toThrowError('Expecting "list" to be object, got function');
+		expect(() => (u.list = 5)).toThrow('Expecting "list" to be object, got number');
+		expect(() => (u.list = 0.12)).toThrow('Expecting "list" to be object, got number');
+		expect(() => (u.list = 12n)).toThrow('Expecting "list" to be object, got bigint');
+		expect(() => (u.list = '5')).toThrow('Expecting "list" to be object, got string');
+		expect(() => (u.list = [])).toThrow('Expecting "list" to be object, got array');
+		expect(() => (u.list = function () {})).toThrow('Expecting "list" to be object, got function');
 	});
 
 	it(`Testing assignment on not null`, () => {
@@ -112,7 +112,7 @@ describe('Testing ObjectType', () => {
 	});
 
 	it(`Testing invalid definition`, () => {
-		expect(() => Scenario3.create()).toThrowError('Default value in ObjectType must be type of object, got number');
+		expect(() => Scenario3.create()).toThrow('Default value in ObjectType must be type of object, got number');
 	});
 
 	it(`Testing default value`, () => {
@@ -133,8 +133,8 @@ describe('Testing ObjectType', () => {
 	});
 
 	it(`Testing custom validator`, () => {
-		expect(() => Scenario6.create()).toThrowError('Default value error: One should be less than 10');
-		expect(() => Scenario6.create({list: {one: 1, two: 2}})).toThrowError('One should be less than 10');
+		expect(() => Scenario6.create()).toThrow('Default value error: One should be less than 10');
+		expect(() => Scenario6.create({list: {one: 1, two: 2}})).toThrow('One should be less than 10');
 		expect(Scenario6.create({list: {one: 15, two: 2}}).list).toStrictEqual({one: 15, two: 2});
 	});
 

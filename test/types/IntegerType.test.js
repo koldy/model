@@ -142,29 +142,29 @@ describe('Testing IntegerType', () => {
 	});
 
 	it(`Testing errors`, () => {
-		// expect(() => Scenario1.create({count: [5]})).toThrowError('Can not declare property "_firstName" in Scenario2 model because it starts with underscore which is forbidden');
+		// expect(() => Scenario1.create({count: [5]})).toThrow('Can not declare property "_firstName" in Scenario2 model because it starts with underscore which is forbidden');
 
 		expect(() => {
 			const x = Scenario1.create();
 			x.count = [];
-		}).toThrowError('Expecting "count" to be String, got array');
+		}).toThrow('Expecting "count" to be String, got array');
 
 		expect(() => {
 			const x = Scenario1.create();
 			x.count = {};
-		}).toThrowError('Expecting "count" to be String, got object');
+		}).toThrow('Expecting "count" to be String, got object');
 
 		expect(() => {
 			const x = Scenario1.create();
 			x.count = true;
-		}).toThrowError('Expecting "count" to be String, got boolean');
+		}).toThrow('Expecting "count" to be String, got boolean');
 
 		expect(() => {
 			const x = Scenario1.create();
 			x.count = function () {};
-		}).toThrowError('Expecting "count" to be String, got function');
+		}).toThrow('Expecting "count" to be String, got function');
 
-		expect(() => Scenario1.create({count: '--4'})).toThrowError('Failed to parse string "--4" to integer');
+		expect(() => Scenario1.create({count: '--4'})).toThrow('Failed to parse string "--4" to integer');
 	});
 
 	it(`Testing default value`, () => {
@@ -176,17 +176,17 @@ describe('Testing IntegerType', () => {
 
 		expect(Scenario3.create({count: 5}).count).toBe(5);
 
-		expect(() => Scenario6.create().count).toThrowError('Default value error: Count should not be less than 55');
-		expect(() => Scenario7.create().count).toThrowError('Default value error: 70 is minimum value allowed for "count", got 65');
-		expect(() => Scenario7.create({count: 69}).count).toThrowError('70 is minimum value allowed for "count", got 69');
-		expect(() => Scenario7.create({count: 89}).count).toThrowError('80 is maximum value allowed for "count", got 89');
+		expect(() => Scenario6.create().count).toThrow('Default value error: Count should not be less than 55');
+		expect(() => Scenario7.create().count).toThrow('Default value error: 70 is minimum value allowed for "count", got 65');
+		expect(() => Scenario7.create({count: 69}).count).toThrow('70 is minimum value allowed for "count", got 69');
+		expect(() => Scenario7.create({count: 89}).count).toThrow('80 is maximum value allowed for "count", got 89');
 	});
 
 	it(`Testing not null`, () => {
-		expect(() => Scenario3.create({count: undefined})).toThrowError(
+		expect(() => Scenario3.create({count: undefined})).toThrow(
 			'Property "count" shouldn\'t be null and its default value is null which is not acceptable'
 		);
-		expect(() => Scenario3.create({count: null})).toThrowError(
+		expect(() => Scenario3.create({count: null})).toThrow(
 			'Property "count" shouldn\'t be null and its default value is null which is not acceptable'
 		);
 		expect(Scenario3.create({count: 0}).count).toBe(0);
@@ -194,25 +194,25 @@ describe('Testing IntegerType', () => {
 
 	it(`Testing not null and default value`, () => {
 		expect(Scenario4.create({count: undefined}).count).toBe(77);
-		expect(() => Scenario4.create({count: null})).toThrowError('Expecting "count" not to be null');
+		expect(() => Scenario4.create({count: null})).toThrow('Expecting "count" not to be null');
 		expect(Scenario4.create({count: 0}).count).toBe(0);
 	});
 
 	it(`Testing custom validator`, () => {
-		expect(() => Scenario5.create({count: undefined})).toThrowError();
-		expect(() => Scenario5.create({count: null})).toThrowError();
-		expect(() => Scenario5.create({count: 33})).toThrowError('Count should not be less than 55');
-		expect(() => Scenario5.create({count: 88})).toThrowError('Count should not be greater than 77');
+		expect(() => Scenario5.create({count: undefined})).toThrow();
+		expect(() => Scenario5.create({count: null})).toThrow();
+		expect(() => Scenario5.create({count: 33})).toThrow('Count should not be less than 55');
+		expect(() => Scenario5.create({count: 88})).toThrow('Count should not be greater than 77');
 	});
 
 	it(`Testing wrong min/max definition`, () => {
-		expect(() => Scenario8.create()).toThrowError('Given minimum value for IntegerType is not valid number; expected number, got string');
-		expect(() => Scenario9.create()).toThrowError('Given maximum value for IntegerType is not valid number; expected number, got string');
+		expect(() => Scenario8.create()).toThrow('Given minimum value for IntegerType is not valid number; expected number, got string');
+		expect(() => Scenario9.create()).toThrow('Given maximum value for IntegerType is not valid number; expected number, got string');
 	});
 
 	it(`Testing assign string and empty string`, () => {
 		expect(Scenario2.create({count: ''}).count).toBeNull();
-		expect(() => Scenario3.create({count: ''})).toThrowError('Can not assign empty string to non-nullable IntegerType property "count"');
+		expect(() => Scenario3.create({count: ''})).toThrow('Can not assign empty string to non-nullable IntegerType property "count"');
 
 		const s2 = Scenario2.create();
 		s2.count = '';
@@ -221,7 +221,7 @@ describe('Testing IntegerType', () => {
 		const s4 = Scenario4.create();
 		expect(() => {
 			s4.count = '';
-		}).toThrowError('Can not assign empty string to non-nullable IntegerType property "count"');
+		}).toThrow('Can not assign empty string to non-nullable IntegerType property "count"');
 	});
 
 	it(`Testing with custom getter`, () => {

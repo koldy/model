@@ -69,49 +69,49 @@ class Scenario9 extends Model {
 
 describe('Testing Model definition errors', () => {
 	it(`Throw error on method redeclaration`, () => {
-		expect(() => Scenario1.create()).toThrowError(
+		expect(() => Scenario1.create()).toThrow(
 			'Can not redeclare property "getData" because there is a method with the same name in Scenario1 model'
 		);
 	});
 
 	it(`Throw error if property's name start with underscore`, () => {
-		expect(() => Scenario2.create()).toThrowError(
+		expect(() => Scenario2.create()).toThrow(
 			'Can not declare property "_keys" in Scenario2 model because it is forbidden to be used with Koldy Model'
 		);
 	});
 
 	it(`Throw error if property's name is empty string`, () => {
-		expect(() => Scenario3.create()).toThrowError('There is a property in Scenario3 model on position 1 without a name (empty string)');
+		expect(() => Scenario3.create()).toThrow('There is a property in Scenario3 model on position 1 without a name (empty string)');
 	});
 
 	it(`Throw error if property's name is string with spaces`, () => {
-		expect(() => Scenario4.create()).toThrowError('Can not declare property " " in Scenario4 model because it contains one or more spaces');
+		expect(() => Scenario4.create()).toThrow('Can not declare property " " in Scenario4 model because it contains one or more spaces');
 	});
 
 	it(`Throw error if property's name is string with spaces and has underscore`, () => {
-		expect(() => Scenario5.create()).toThrowError(
+		expect(() => Scenario5.create()).toThrow(
 			'Can not declare property "  _" in Scenario5 model because it contains one or more spaces'
 		);
 	});
 
 	it(`Throw error if property's name is string with spaces and has underscore`, () => {
-		expect(() => Scenario6.create()).toThrowError(
+		expect(() => Scenario6.create()).toThrow(
 			'Can not declare property "x_ " in Scenario6 model because it contains one or more spaces'
 		);
 	});
 
 	it(`Throw error if class model has no definition method overridden`, () => {
-		expect(() => Scenario7.create()).toThrowError(
+		expect(() => Scenario7.create()).toThrow(
 			'Scenario7 definition() method must return object, got null instead; definition() method is probably not defined'
 		);
 	});
 
 	it(`Throw error if class model definition returns non-object`, () => {
-		expect(() => Scenario8.create()).toThrowError('Scenario8 definition() method must return valid object, got function instead');
+		expect(() => Scenario8.create()).toThrow('Scenario8 definition() method must return valid object, got function instead');
 	});
 
 	it(`Throw error if class model definition returns standard function for definition`, () => {
-		expect(() => Scenario9.create()).toThrowError(
+		expect(() => Scenario9.create()).toThrow(
 			'Scenario9.definition() method returned an object with property "count" that\'s not a valid definition type'
 		);
 	});

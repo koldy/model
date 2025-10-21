@@ -87,7 +87,7 @@ describe('Testing Model', () => {
 	});
 
 	it(`Testing wrong User initialization`, () => {
-		expect(() => new User()).toThrowError();
+		expect(() => new User()).toThrow();
 	});
 
 	it(`Testing displayName of User`, () => {
@@ -97,7 +97,7 @@ describe('Testing Model', () => {
 	it(`Testing getters of User`, () => {
 		const u = User.create();
 
-		expect(() => u.id).toThrowError();
+		expect(() => u.id).toThrow();
 		expect(u.firstName).toBeNull();
 		expect(u.lastName).toBeNull();
 	});
@@ -107,7 +107,7 @@ describe('Testing Model', () => {
 		expect(u.hasProperty('firstName')).toBeTruthy();
 		expect(u.hasProperty('lastName')).toBeTruthy();
 		expect(u.hasProperty('id')).toBeFalsy();
-		expect(() => u.hasProperty()).toThrowError('User.hasProperty() expects first parameter to be string, got undefined');
+		expect(() => u.hasProperty()).toThrow('User.hasProperty() expects first parameter to be string, got undefined');
 	});
 
 	it(`Testing manual set and get methods`, () => {
@@ -125,8 +125,8 @@ describe('Testing Model', () => {
 
 		expect(u.get('firstName')).toBe('Second');
 		expect(u.get('lastName')).toBe('Third');
-		expect(() => u.get()).toThrowError('User.get() expects first parameter to be string, got undefined');
-		expect(() => u.set(null, 'Sky')).toThrowError('User.set() expects first parameter to be string, got object');
+		expect(() => u.get()).toThrow('User.get() expects first parameter to be string, got undefined');
+		expect(() => u.set(null, 'Sky')).toThrow('User.set() expects first parameter to be string, got object');
 	});
 
 	it(`Testing empty instance of Admin`, () => {
@@ -138,7 +138,7 @@ describe('Testing Model', () => {
 	});
 
 	it(`Testing wrong Admin initialization`, () => {
-		expect(() => new Admin()).toThrowError();
+		expect(() => new Admin()).toThrow();
 	});
 
 	it(`Testing displayName of Admin`, () => {
@@ -221,7 +221,7 @@ describe('Testing Model', () => {
 
 		u.address.number = 8;
 		expect(u.address.number).toBe(8);
-		expect(() => (u.address.number = {})).toThrowError();
+		expect(() => (u.address.number = {})).toThrow();
 		expect(u.address.number).toBe(8);
 
 		u.address.suburb.age = '8.2531';
@@ -256,7 +256,7 @@ describe('Testing Model', () => {
 			}
 		});
 
-		expect(() => (u.address.suburb.x = 5)).toThrowError();
+		expect(() => (u.address.suburb.x = 5)).toThrow();
 
 		u.setData({
 			address: {
@@ -402,7 +402,7 @@ describe('Testing Model', () => {
 			}
 
 			InvalidDefinitionCase.create();
-		}).toThrowError(
+		}).toThrow(
 			'InvalidDefinitionCase.definition() method returned an object with property "name" that\'s not a valid definition type'
 		);
 	});

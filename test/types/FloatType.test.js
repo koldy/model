@@ -174,29 +174,29 @@ describe('Testing FloatType', () => {
 	});
 
 	it(`Testing errors`, () => {
-		// expect(() => Scenario1.create({count: [5]})).toThrowError('Can not declare property "_firstName" in Scenario2 model because it starts with underscore which is forbidden');
+		// expect(() => Scenario1.create({count: [5]})).toThrow('Can not declare property "_firstName" in Scenario2 model because it starts with underscore which is forbidden');
 
 		expect(() => {
 			const x = Scenario1.create();
 			x.count = [];
-		}).toThrowError('Expecting "count" to be String, got array');
+		}).toThrow('Expecting "count" to be String, got array');
 
 		expect(() => {
 			const x = Scenario1.create();
 			x.count = {};
-		}).toThrowError('Expecting "count" to be String, got object');
+		}).toThrow('Expecting "count" to be String, got object');
 
 		expect(() => {
 			const x = Scenario1.create();
 			x.count = true;
-		}).toThrowError('Expecting "count" to be String, got boolean');
+		}).toThrow('Expecting "count" to be String, got boolean');
 
 		expect(() => {
 			const x = Scenario1.create();
 			x.count = function () {};
-		}).toThrowError('Expecting "count" to be String, got function');
+		}).toThrow('Expecting "count" to be String, got function');
 
-		expect(() => Scenario1.create({count: '--4'})).toThrowError('Failed to parse string "--4" to integer');
+		expect(() => Scenario1.create({count: '--4'})).toThrow('Failed to parse string "--4" to integer');
 	});
 
 	it(`Testing default value`, () => {
@@ -208,17 +208,17 @@ describe('Testing FloatType', () => {
 
 		expect(Scenario3.create({count: 5}).count).toBe(5);
 
-		expect(() => Scenario6.create().count).toThrowError('Default value error: Count should not be less than 55');
-		expect(() => Scenario7.create().count).toThrowError('Default value error: 70 is minimum value allowed for "count", got 65');
-		expect(() => Scenario7.create({count: 69}).count).toThrowError('70 is minimum value allowed for "count", got 69');
-		expect(() => Scenario7.create({count: 89}).count).toThrowError('80 is maximum value allowed for "count", got 89');
+		expect(() => Scenario6.create().count).toThrow('Default value error: Count should not be less than 55');
+		expect(() => Scenario7.create().count).toThrow('Default value error: 70 is minimum value allowed for "count", got 65');
+		expect(() => Scenario7.create({count: 69}).count).toThrow('70 is minimum value allowed for "count", got 69');
+		expect(() => Scenario7.create({count: 89}).count).toThrow('80 is maximum value allowed for "count", got 89');
 	});
 
 	it(`Testing not null`, () => {
-		expect(() => Scenario3.create({count: undefined})).toThrowError(
+		expect(() => Scenario3.create({count: undefined})).toThrow(
 			'Property "count" shouldn\'t be null and its default value is null which is not acceptable'
 		);
-		expect(() => Scenario3.create({count: null})).toThrowError(
+		expect(() => Scenario3.create({count: null})).toThrow(
 			'Property "count" shouldn\'t be null and its default value is null which is not acceptable'
 		);
 		expect(Scenario3.create({count: 0}).count).toBe(0);
@@ -226,21 +226,21 @@ describe('Testing FloatType', () => {
 
 	it(`Testing not null and default value`, () => {
 		expect(Scenario4.create({count: undefined}).count).toBe(77);
-		expect(() => Scenario4.create({count: null})).toThrowError('Expecting "count" not to be null');
+		expect(() => Scenario4.create({count: null})).toThrow('Expecting "count" not to be null');
 		expect(Scenario4.create({count: 0}).count).toBe(0);
 	});
 
 	it(`Testing custom validator`, () => {
-		expect(() => Scenario5.create({count: undefined})).toThrowError();
-		expect(() => Scenario5.create({count: null})).toThrowError();
-		expect(() => Scenario5.create({count: 33})).toThrowError('Count should not be less than 55');
-		expect(() => Scenario5.create({count: 88})).toThrowError('Count should not be greater than 77');
+		expect(() => Scenario5.create({count: undefined})).toThrow();
+		expect(() => Scenario5.create({count: null})).toThrow();
+		expect(() => Scenario5.create({count: 33})).toThrow('Count should not be less than 55');
+		expect(() => Scenario5.create({count: 88})).toThrow('Count should not be greater than 77');
 	});
 
 	it(`Testing decimals`, () => {
 		expect(Scenario8.create().x).toBe(12.34);
 		expect(Scenario8.create({x: undefined}).x).toBe(12.34);
-		expect(() => Scenario8.create({x: null}).x).toThrowError('Expecting "x" not to be null');
+		expect(() => Scenario8.create({x: null}).x).toThrow('Expecting "x" not to be null');
 		expect(Scenario8.create().getData()).toStrictEqual({x: 12.34, y: 12.34});
 
 		const a = Scenario8.create();
@@ -256,16 +256,16 @@ describe('Testing FloatType', () => {
 	});
 
 	it(`Testing invalid min/max/decimals values`, () => {
-		expect(() => Scenario9.create()).toThrowError('Given minimum value for FloatType is not valid number; expected number, got object');
-		expect(() => Scenario10.create()).toThrowError('Given maximum value for FloatType is not valid number; expected number, got object');
-		expect(() => Scenario11.create()).toThrowError('Given decimals value for FloatType is not valid number; expected number, got object');
-		expect(() => Scenario12.create()).toThrowError('Given decimals value for FloatType should be integer, not float; got 3.9');
-		expect(() => Scenario13.create()).toThrowError('Given decimals value for FloatType should be positive integer; got -1');
+		expect(() => Scenario9.create()).toThrow('Given minimum value for FloatType is not valid number; expected number, got object');
+		expect(() => Scenario10.create()).toThrow('Given maximum value for FloatType is not valid number; expected number, got object');
+		expect(() => Scenario11.create()).toThrow('Given decimals value for FloatType is not valid number; expected number, got object');
+		expect(() => Scenario12.create()).toThrow('Given decimals value for FloatType should be integer, not float; got 3.9');
+		expect(() => Scenario13.create()).toThrow('Given decimals value for FloatType should be positive integer; got -1');
 	});
 
 	it(`Testing assign string and empty string`, () => {
 		expect(Scenario2.create({count: ''}).count).toBeNull();
-		expect(() => Scenario3.create({count: ''})).toThrowError('Can not assign empty string to non-nullable FloatType property "count"');
+		expect(() => Scenario3.create({count: ''})).toThrow('Can not assign empty string to non-nullable FloatType property "count"');
 
 		const s2 = Scenario2.create();
 		s2.count = '';
@@ -274,7 +274,7 @@ describe('Testing FloatType', () => {
 		const s4 = Scenario4.create();
 		expect(() => {
 			s4.count = '';
-		}).toThrowError('Can not assign empty string to non-nullable FloatType property "count"');
+		}).toThrow('Can not assign empty string to non-nullable FloatType property "count"');
 	});
 
 	it(`Testing with custom getter`, () => {

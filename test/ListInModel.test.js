@@ -169,6 +169,6 @@ describe('Another simple case when List is in Model', () => {
 					}
 				}
 			]);
-		}).toThrowError('Expected array for TagsList.create(), got object');
+		}).toThrow('Expected array for TagsList.create(), got object');
 	});
 });

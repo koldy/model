@@ -89,7 +89,7 @@ describe(`Testing StringType`, () => {
 			firstName: 'Vlatko'
 		});
 
-		expect(() => u.middleName).toThrowError();
+		expect(() => u.middleName).toThrow();
 	});
 
 	it(`Get null on unset prop`, () => {
@@ -122,7 +122,7 @@ describe(`Testing StringType`, () => {
 			lastName: 'Koudela'
 		});
 
-		expect(() => u.middleName = 'yo').toThrowError();
+		expect(() => u.middleName = 'yo').toThrow();
 	});
 
 	it(`Testing getData() on empty instance of User`, () => {
@@ -208,12 +208,12 @@ describe(`Testing StringType`, () => {
 	})
 
 	it(`Testing custom validator`, () => {
-		expect(() => Scenario4.create({name: 'Sky'})).toThrowError('Value should be between 5 and 10 characters');
+		expect(() => Scenario4.create({name: 'Sky'})).toThrow('Value should be between 5 and 10 characters');
 		expect(Scenario4.create({name: 'Vlatko'}).name).toBe('Vlatko');
 	})
 
 	it(`Testing invalid validator`, () => {
-		expect(() => Scenario5.create({name: 'Sky'})).toThrowError('Expected function for validator, got object');
+		expect(() => Scenario5.create({name: 'Sky'})).toThrow('Expected function for validator, got object');
 	})
 
 	it(`Testing function as default value`, () => {
