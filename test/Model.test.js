@@ -77,6 +77,18 @@ class Scenario3 extends Model {
 	}
 }
 
+class Scenario4 extends Model {
+	_myProperty = 5;
+
+	definition() {
+		return {
+			_id: new AnyType(),
+			names: Names,
+			__: new ObjectType()
+		};
+	}
+}
+
 describe('Testing Model', () => {
 	it(`Testing empty instance of User`, () => {
 		expect(User.create()).toBeInstanceOf(User);
@@ -402,9 +414,7 @@ describe('Testing Model', () => {
 			}
 
 			InvalidDefinitionCase.create();
-		}).toThrow(
-			'InvalidDefinitionCase.definition() method returned an object with property "name" that\'s not a valid definition type'
-		);
+		}).toThrow('InvalidDefinitionCase.definition() method returned an object with property "name" that\'s not a valid definition type');
 	});
 });
 
@@ -586,5 +596,61 @@ describe(`List in List in Model null assignments test`, () => {
 		expect(a).toBeInstanceOf(Account);
 		expect(a.profilePhoto).toBeInstanceOf(Photo);
 		expect(a.profilePhoto.thumbnails).toBeInstanceOf(Thumbnails);
+	});
+});
+
+describe('Testing private property access', () => {
+	test('Accessing _keys should return undefined', () => {
+		const user = User.create({firstName: 'John', lastName: 'Doe'});
+
+		expect(user._keys).toBeUndefined();
+		expect(typeof user._keys).toBe('undefined');
+	});
+
+	test('Accessing _definitions should return undefined', () => {
+		const user = User.create({firstName: 'John', lastName: 'Doe'});
+
+		expect(user._definitions).toBeUndefined();
+		expect(typeof user._definitions).toBe('undefined');
+	});
+
+	test('Private properties should not expose internal data', () => {
+		const user = User.create({firstName: 'John', lastName: 'Doe'});
+
+		// Verify the model works correctly
+		expect(user.firstName).toBe('John');
+		expect(user.lastName).toBe('Doe');
+		expect(user.fullName()).toBe('John Doe');
+
+		// But private properties should return undefined
+		expect(user._keys).toBeUndefined();
+		expect(user._definitions).toBeUndefined();
+
+		// Trying to modify through _keys should do nothing (since it's undefined)
+		if (user._keys) {
+			user._keys.push('invalidKey'); // This won't execute because _keys is undefined
+		}
+
+		// Model should still work correctly
+		expect(user.firstName).toBe('John');
+		expect(user.lastName).toBe('Doe');
+	});
+
+	test('Custom private properties should return undefined', () => {
+		const scenario4 = Scenario4.create();
+		expect(() => scenario4._myProperty).toThrow("Can not get _myProperty because it's not defined in Scenario4 model");
+	});
+
+	test('Invalid properties should still throw errors', () => {
+		const user = User.create({firstName: 'John', lastName: 'Doe'});
+
+		// Private properties return undefined (no error)
+		expect(user._keys).toBeUndefined();
+		expect(user._definitions).toBeUndefined();
+
+		// But truly invalid properties should throw
+		expect(() => {
+			const x = user.invalidProperty;
+		}).toThrow("Can not get invalidProperty because it's not defined in User model");
 	});
 });

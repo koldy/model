@@ -163,7 +163,8 @@ export default class Model {
 				}
 
 				if (!(definition instanceof BaseType)) {
-					const reactSpecificProps = ['$$typeof', '_owner', '_store', 'key', 'ref'];
+					// React internal properties and Model internal properties - return undefined to prevent React DevTools errors
+					const reactSpecificProps = ['$$typeof', '_owner', '_store', 'key', 'ref', '_keys', '_definitions'];
 					if (reactSpecificProps.indexOf(prop) >= 0) {
 						return undefined;
 					}

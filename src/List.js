@@ -98,8 +98,8 @@ export default class List {
 					}
 				} catch (ignored) {}
 
-				// React internal properties - return undefined if not defined
-				const reactSpecificProps = ['$$typeof', '_owner', '_store', 'key', 'ref'];
+				// React internal properties and List internal properties - return undefined to prevent React DevTools errors
+				const reactSpecificProps = ['$$typeof', '_owner', '_store', 'key', 'ref', '_list', '_definition', '_definitionInfo'];
 				if (reactSpecificProps.indexOf(prop) >= 0) {
 					return undefined;
 				}

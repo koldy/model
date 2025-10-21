@@ -394,3 +394,61 @@ describe('Testing List', () => {
     expect(list2.length).toBe(1);
   });
 });
+
+describe('Testing private property access', () => {
+  test('Accessing _list should return undefined', () => {
+    const list = Scenario1.create(['one', 'two', 'three']);
+
+    expect(list._list).toBeUndefined();
+    expect(typeof list._list).toBe('undefined');
+  });
+
+  test('Accessing _definition should return undefined', () => {
+    const list = Scenario1.create(['one', 'two', 'three']);
+
+    expect(list._definition).toBeUndefined();
+    expect(typeof list._definition).toBe('undefined');
+  });
+
+  test('Accessing _definitionInfo should return undefined', () => {
+    const list = Scenario1.create(['one', 'two', 'three']);
+
+    expect(list._definitionInfo).toBeUndefined();
+    expect(typeof list._definitionInfo).toBe('undefined');
+  });
+
+  test('Private properties should not expose internal data', () => {
+    const list = Scenario1.create(['one', 'two', 'three']);
+
+    // Verify the list works correctly
+    expect(list[0]).toBe('one');
+    expect(list[1]).toBe('two');
+    expect(list[2]).toBe('three');
+    expect(list.length).toBe(3);
+
+    // But private properties should return undefined
+    expect(list._list).toBeUndefined();
+    expect(list._definition).toBeUndefined();
+    expect(list._definitionInfo).toBeUndefined();
+
+    // Trying to modify through _list should do nothing (since it's undefined)
+    if (list._list) {
+      list._list.push('four'); // This won't execute because _list is undefined
+    }
+
+    // List should still have only 3 items
+    expect(list.length).toBe(3);
+  });
+
+  test('Invalid properties should still throw errors', () => {
+    const list = Scenario1.create(['one', 'two', 'three']);
+
+    // Private properties return undefined (no error)
+    expect(list._list).toBeUndefined();
+
+    // But truly invalid properties should throw
+    expect(() => {
+      const x = list.invalidProperty;
+    }).toThrow('Scenario1 has no property "invalidProperty"');
+  });
+});
