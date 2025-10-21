@@ -77,6 +77,11 @@ export default class List {
 				return true;
 			},
 			get: (target, prop) => {
+				// Allow access to Symbol properties
+				if (typeof prop === 'symbol') {
+					return target[prop];
+				}
+
 				if (prop === 'length') {
 					return target.count();
 				}
@@ -92,6 +97,12 @@ export default class List {
 						return target.get(index);
 					}
 				} catch (ignored) {}
+
+				// React internal properties - return undefined if not defined
+				const reactSpecificProps = ['$$typeof', '_owner', '_store', 'key', 'ref'];
+				if (reactSpecificProps.indexOf(prop) >= 0) {
+					return undefined;
+				}
 
 				throw new Error(`${target.displayName()} has no property "${prop}"`);
 			}

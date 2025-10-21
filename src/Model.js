@@ -147,6 +147,11 @@ export default class Model {
 			},
 
 			get: (target, prop) => {
+				// Allow Symbol properties
+				if (typeof prop === 'symbol') {
+					return target[prop];
+				}
+
 				const definition = target._definitions[prop];
 
 				if (typeof target[prop] === 'function') {
@@ -158,6 +163,11 @@ export default class Model {
 				}
 
 				if (!(definition instanceof BaseType)) {
+					const reactSpecificProps = ['$$typeof', '_owner', '_store', 'key', 'ref'];
+					if (reactSpecificProps.indexOf(prop) >= 0) {
+						return undefined;
+					}
+
 					throw new TypeError(`Can not get ${prop} because it's not defined in ${target.displayName()} model`);
 				}
 
