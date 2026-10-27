@@ -1,3 +1,4 @@
+import {stripVTControlCharacters} from 'util';
 import Model from '../src/Model';
 import List from '../src/List';
 import StringType from '../src/types/StringType';
@@ -327,9 +328,16 @@ describe('Testing React Compatibility', () => {
 		});
 
 		it('Should print models in a failing assertion', () => {
-			expect(() => expect(User.create({firstName: 'John'})).toEqual(User.create({firstName: 'Jane'}))).toThrow(
-				'expect(received).toEqual(expected)'
-			);
+			let error;
+			try {
+				expect(User.create({firstName: 'John'})).toEqual(User.create({firstName: 'Jane'}));
+			} catch (e) {
+				error = e;
+			}
+
+			expect(error).toBeDefined();
+			// Jest colors the message when it writes to a terminal, so it's compared without the color codes
+			expect(stripVTControlCharacters(error.message)).toContain('expect(received).toEqual(expected)');
 		});
 
 		it('Should still throw for other undeclared properties', () => {
