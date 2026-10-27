@@ -1,5 +1,5 @@
 declare module "koldy-model" {
-  type DefinitionType = {
+  export type DefinitionType = {
     [p: string]:
       AnyType
       | ArrayType
@@ -13,6 +13,25 @@ declare module "koldy-model" {
       | typeof Model
       | typeof List<Model>
       | { [p: string]: any }
+  };
+
+  /**
+   * Opt-in return type for definition() that checks it against the class fields:
+   * - every non-function field of the class must be in definition() (optional fields too)
+   * - function-typed fields may be in definition(), but don't have to be
+   * - any other key is an error
+   *
+   * class User extends Model {
+   *   name: string;
+   *   definition(): ModelDefinition<User> {
+   *     return {name: new StringType()};
+   *   }
+   * }
+   */
+  export type ModelDefinition<T> = {
+    [K in keyof T as NonNullable<T[K]> extends Function ? never : K]-?: DefinitionType[string];
+  } & {
+    [K in Exclude<keyof T, keyof Model> as NonNullable<T[K]> extends Function ? K : never]?: DefinitionType[string];
   };
 
 	export class Model {

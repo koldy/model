@@ -1,4 +1,4 @@
-import {isFunction, isObject} from './helpers';
+import {getBoundMethod, isFunction, isObject, isProbeProperty} from './helpers';
 import BaseType from './types/BaseType';
 import ConstantType from './types/ConstantType';
 import List from './List';
@@ -22,6 +22,11 @@ export default class Model {
 	 * @param {{}} initialData
 	 */
 	constructor(initialData = null) {
+		// internal fields are not enumerable, so Object.keys(), {...model} and for...in give only the declared fields
+		['_keys', '_definitions'].forEach((name) => {
+			Object.defineProperty(this, name, {value: this[name], enumerable: false, writable: true, configurable: true});
+		});
+
 		const data = isObject(initialData) ? initialData : {};
 
 		if (isObject(data) && typeof data.__KOLDY_MODEL_USE_ONLY__ === 'boolean' && data.__KOLDY_MODEL_USE_ONLY__ === true) {
@@ -155,7 +160,7 @@ export default class Model {
 				const definition = target._definitions[prop];
 
 				if (typeof target[prop] === 'function') {
-					return target[prop].bind(target);
+					return getBoundMethod(target, prop);
 				}
 
 				if (isObject(target[prop]) && (target[prop] instanceof Model || target[prop] instanceof List)) {
@@ -166,6 +171,11 @@ export default class Model {
 					// React internal properties and Model internal properties - return undefined to prevent React DevTools errors
 					const reactSpecificProps = ['$$typeof', '_owner', '_store', 'key', 'ref', '_keys', '_definitions'];
 					if (reactSpecificProps.indexOf(prop) >= 0) {
+						return undefined;
+					}
+
+					// then, asymmetricMatch, nodeType, "@@..." - see isProbeProperty() for why each of them reads as undefined
+					if (isProbeProperty(prop)) {
 						return undefined;
 					}
 
@@ -276,7 +286,7 @@ export default class Model {
 		const definition = this._definitions[name];
 
 		if (typeof this[name] === 'function') {
-			return this[name].bind(this);
+			return getBoundMethod(this, name);
 		}
 
 		if (isObject(this[name]) && (this[name] instanceof Model || this[name] instanceof List)) {

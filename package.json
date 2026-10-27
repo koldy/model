@@ -5,12 +5,14 @@
 	"main": "lib/index.js",
 	"module": "esm/index.js",
 	"typings": "./typings.d.ts",
+	"sideEffects": false,
 	"scripts": {
 		"build": "npm run build:esm && npm run build:cjs",
 		"build:esm": "babel --delete-dir-on-start --env-name esm -d esm/ src/",
 		"build:cjs": "babel --delete-dir-on-start --env-name cjs -d lib/ src/",
-		"prepublishOnly": "npm run test && npm run build",
+		"prepublishOnly": "npm run test && npm run test:types && npm run build",
 		"test": "jest",
+		"test:types": "tsc --noEmit -p test/tsconfig.json && tsc --noEmit -p test/tsconfig.strict.json",
 		"lint": "eslint ./src --ignore-pattern *.test.js"
 	},
 	"author": "Vlatko Koudela",

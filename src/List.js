@@ -1,4 +1,4 @@
-import {isObject, isArray, isFunction, typeName} from './helpers';
+import {isObject, isArray, isFunction, typeName, getBoundMethod, isProbeProperty} from './helpers';
 import Model from './Model';
 import BaseType from './types/BaseType';
 
@@ -30,6 +30,12 @@ export default class List {
 	 */
 	constructor(data = {}) {
 		this._list = [];
+
+		// internal fields are not enumerable, so Object.keys(), {...list} and for...in don't see them
+		['_list', '_definition', '_definitionInfo'].forEach((name) => {
+			Object.defineProperty(this, name, {value: this[name], enumerable: false, writable: true, configurable: true});
+		});
+
 		if (isObject(data) && typeof data.__KOLDY_MODEL_USE_ONLY__ === 'boolean' && data.__KOLDY_MODEL_USE_ONLY__ === true) {
 			// it's fine
 		} else {
@@ -87,7 +93,7 @@ export default class List {
 				}
 
 				if (typeof target[prop] === 'function') {
-					return target[prop].bind(target);
+					return getBoundMethod(target, prop);
 				}
 
 				try {
@@ -101,6 +107,11 @@ export default class List {
 				// React internal properties and List internal properties - return undefined to prevent React DevTools errors
 				const reactSpecificProps = ['$$typeof', '_owner', '_store', 'key', 'ref', '_list', '_definition', '_definitionInfo'];
 				if (reactSpecificProps.indexOf(prop) >= 0) {
+					return undefined;
+				}
+
+				// then, asymmetricMatch, nodeType, "@@..." - see isProbeProperty() for why each of them reads as undefined
+				if (isProbeProperty(prop)) {
 					return undefined;
 				}
 

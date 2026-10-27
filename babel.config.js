@@ -14,11 +14,11 @@ module.exports = function (api) {
 				[
 					'@babel/preset-env',
 					{
-						useBuiltIns: 'usage', // "usage" | "entry" | false, defaults to false.
-						corejs: 3,
+						// keep import/export so bundlers get real ES modules
+						modules: false,
+						// no polyfills (no useBuiltIns/corejs): the library needs only Proxy, WeakMap and classes, anything else is up to the consumer
 						targets: {
-							esmodules: true,
-							ie: '11'
+							esmodules: true
 						}
 					}
 				]

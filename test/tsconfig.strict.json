@@ -1,0 +1,10 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"strict": true,
+		// the type tests declare fields without initializers, the way models usually do
+		"strictPropertyInitialization": false,
+		// typings.d.ts itself doesn't pass noImplicitAny (forEvery has no return type); it's checked by tsconfig.json
+		"skipLibCheck": true
+	}
+}

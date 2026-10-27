@@ -1,0 +1,10 @@
+{
+	"compilerOptions": {
+		"strict": false,
+		"noEmit": true,
+		"target": "es2018",
+		"types": [],
+		"skipLibCheck": false
+	},
+	"files": ["../typings.d.ts", "typings.test-d.ts"]
+}

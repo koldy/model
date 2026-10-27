@@ -157,3 +157,65 @@ export const trim = function (str, charlist = undefined) {
 
 	return whitespace.indexOf(str.charAt(0)) === -1 ? str : '';
 };
+
+/**
+ * Properties that other code reads on any object to find out what it is (duck typing). Models and lists don't have them, so
+ * reading them returns undefined instead of throwing. A declared field or a method with the same name is returned as usual.
+ *
+ * - then: Promise resolution reads it to detect a thenable (await, Promise.resolve(), returning from an async function)
+ * - asymmetricMatch: Jest's equality check (toEqual, toHaveBeenCalledWith...) reads it to detect asymmetric matchers
+ * - nodeType: DOM node checks read it (Jest's equality check and pretty-format, lodash isElement)
+ *
+ * toJSON is not here because Model and List both implement it.
+ *
+ * @type {string[]}
+ */
+const probeProperties = ['then', 'asymmetricMatch', 'nodeType'];
+
+/**
+ * Returns true if the given property is a duck-typing probe that should read as undefined instead of throwing.
+ *
+ * Properties starting with "@@" are string stand-ins for well-known symbols and library markers, e.g. "@@iterator" (React's
+ * getIteratorFn), "@@toStringTag", "@@observable" and Immutable.js "@@__IMMUTABLE_ITERABLE__@@" (read by Jest's pretty-format).
+ *
+ * @param {string} prop
+ * @return {boolean}
+ */
+export const isProbeProperty = function (prop) {
+	return probeProperties.indexOf(prop) >= 0 || prop.indexOf('@@') === 0;
+};
+
+/**
+ * Bound methods by object and property name. A WeakMap keeps it off the objects themselves and lets them be garbage collected.
+ *
+ * @type {WeakMap<object, Map<string, {fn: function, bound: function}>>}
+ */
+const boundMethods = new WeakMap();
+
+/**
+ * Returns target[prop] bound to target. Returns the same bound function on every call until target[prop] changes (a field
+ * holding a function can be reassigned), so methods keep their identity between reads.
+ *
+ * @param {object} target
+ * @param {string} prop
+ * @return {function}
+ */
+export const getBoundMethod = function (target, prop) {
+	const fn = target[prop];
+	let methods = boundMethods.get(target);
+
+	if (methods === undefined) {
+		methods = new Map();
+		boundMethods.set(target, methods);
+	}
+
+	const cached = methods.get(prop);
+
+	if (cached !== undefined && cached.fn === fn) {
+		return cached.bound;
+	}
+
+	const bound = fn.bind(target);
+	methods.set(prop, {fn, bound});
+	return bound;
+};

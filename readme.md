@@ -684,6 +684,63 @@ list.push(true);
 console.log(list[1]); // returns true
 ```
 
+## Behaviour notes
+
+### Reading undeclared properties
+
+Reading a property that isn't in `definition()` throws a `TypeError`. Some properties are read by other code on any object to find out
+what it is, so they read as `undefined` instead of throwing:
+
+- `then`, so `await model`, `Promise.resolve(model)` and returning a model from an `async` function work
+- `asymmetricMatch` and `nodeType`, read by Jest's `toEqual()` and by DOM checks
+- any property starting with `@@`, such as `@@iterator` and `@@toStringTag` (string stand-ins for symbols, read by React and Jest)
+- React's `$$typeof`, `_owner`, `_store`, `key` and `ref`, and all Symbol properties
+
+A declared field or a method with one of these names works as usual. Anything else that isn't declared still throws, and so does
+`model.get('then')`. Lists behave the same way.
+
+```ecmascript 6
+const user = User.create({id: 1});
+await user; // resolves to user
+user.then; // undefined
+user.age; // throws TypeError
+```
+
+### Methods keep their identity
+
+Reading a method returns the same function every time, bound to its model or list, so it's safe to pass as a React prop or to use in
+`memo()`, `useCallback()` and `useEffect()` dependencies:
+
+```ecmascript 6
+user.getData === user.getData; // true
+users.map === users.map; // true
+
+const getData = user.getData;
+getData(); // works, "this" is still the user
+```
+
+Every instance has its own bound functions, so a `clone()` doesn't share them with the original.
+
+### Spreading
+
+`{...model}`, `Object.keys(model)` and `for...in` give only the declared fields. Values are the same as reading the fields one by one,
+so nested models and lists stay instances and are not converted to plain objects. `{...list}` gives an empty object, use
+`list.getData()` or `list.toArray()` to get the elements.
+
+```ecmascript 6
+Object.keys({...user}); // ['id', 'firstName', 'lastName']
+```
+
+Jest's `toEqual()` compares models field by field, but it can't look into lists, so any two lists are equal to it. Compare
+`list.getData()` instead.
+
+### Copying and structuredClone
+
+Models and lists are Proxies, which `structuredClone()` can't copy (it throws `#<User> could not be cloned`), and the library can't
+change that. Use `model.clone()` to copy a model, or `model.getData()` to get its data as a plain object. Lists of models are the
+exception in `getData()`: you get the list's own array with model instances in it, so `structuredClone(model.getData())` only works
+for models without such lists.
+
 ## TypeScript
 
 The TypeScript support is added from `1.2.0`. To define types in your models, do the following:
@@ -726,4 +783,57 @@ Then, to create a new list of users, you'll have to pass both types to create me
 const users = Users.create<Users, User>([
 	{firstName: 'Vlatko'}
 ]);
+```
+
+### Checking definition() against class fields
+
+TypeScript models declare every field twice: as a class field for the types and in `definition()` for runtime. To make TypeScript
+check that the two match, annotate `definition()` with `ModelDefinition`:
+
+```typescript
+import {Model, ModelDefinition, StringType} from 'koldy-model';
+
+class Invoice extends Model {
+    uuid: string | null;
+    note?: string;
+    formatter?: (value: number) => string;
+
+    definition(): ModelDefinition<Invoice> {
+        return {
+            uuid: new StringType(),
+            note: new StringType()
+        };
+    }
+}
+```
+
+It's opt-in and checks the keys only:
+
+- every field that isn't a function must be in `definition()`, optional fields too
+- fields typed as functions (like `formatter` above) may be in `definition()`, but don't have to be
+- any other key is an error, so a field that's missing, misspelled or renamed on one side (`entity` on the class, `entityId` in
+`definition()`) fails to compile instead of throwing at runtime
+
+It doesn't check that a value fits its field (for example that a `Date` field uses `DateType`). TypeScript can't tell methods from
+fields typed as functions, so a method's name is accepted as a key too, and `create()` rejects it at runtime.
+
+For generic models, use the default type arguments (`ModelDefinition<Paged>`, not `ModelDefinition<Paged<T>>`). When a model spreads
+`super.definition()`, annotate the parent with `ModelDefinition` too:
+
+```typescript
+class Paged<T = {[p: string]: any}> extends Model {
+    data: T;
+
+    definition(): ModelDefinition<Paged> {
+        return {data: new ObjectType()};
+    }
+}
+
+class PaidInvoice extends Invoice {
+    paidAt: Date;
+
+    definition(): ModelDefinition<PaidInvoice> {
+        return {...super.definition(), paidAt: new DateType()};
+    }
+}
 ```
